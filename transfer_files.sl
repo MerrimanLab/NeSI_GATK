@@ -7,6 +7,12 @@
 #SBATCH --nodes=1
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=ALL
+
+# Murray Cadzow
+# University of Otago
+# 20 Oct 2015
+
+
 file=$1
 export OPENBLAS_MAIN_FREE=1
 

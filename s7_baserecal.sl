@@ -5,8 +5,14 @@
 #SBATCH --mem-per-cpu=1024  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=12   # 12 OpenMP Threads
 #SBATCH --array=1-22
+
+# Murray Cadzow
+# University of Otago
+# 20 Oct 2015
+
+
 export OPENBLAS_MAIN_FREE=1
-POP=$1
+
 i=$SLURM_ARRAY_TASK_ID
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt

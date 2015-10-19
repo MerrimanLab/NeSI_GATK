@@ -9,6 +9,14 @@
 # Here is an example how a chain job can looks like, the example submits 3 jobs
 # (Pre-Processing Job, MPI job and finally the Post-Processing Job)
 # that will be executed on after each other
+
+
+# Murray Cadzow
+# University of Otago
+# 20 Oct 2015
+
+
+# start first part of workflow where full genome has to be used
 TASKS="s1_align.sl s2_sortSam.sl s3_markdup.sl s4_index.sl s5_indelTarget.sl"
 DEPENDENCY=""
 for TASK in $TASKS ; do

@@ -8,6 +8,13 @@
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=ALL
 
+
+# Murray Cadzow
+# University of Otago
+# 20 Oct 2015
+
+sample=$1
+
 export OPENBLAS_MAIN_FREE=1
 
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
