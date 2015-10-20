@@ -1,10 +1,13 @@
 #!/bin/bash
 #SBATCH -J s6_realign
 #SBATCH -A uoo00008         # Project Account
-#SBATCH --time=00:01:00     # Walltime
-#SBATCH --mem-per-cpu=1024  # memory/cpu (in MB)
+#SBATCH --time=15:00:00     # Walltime
+#SBATCH --mem-per-cpu=31024  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
-#SBATCH --array=1-22
+#SBATCH --mail-user=murray.cadzow@otago.ac.nz
+#SBATCH --mail-type=ALL
+
+
 
 # Murray Cadzow
 # University of Otago
@@ -13,33 +16,34 @@
 
 export OPENBLAS_MAIN_FREE=1
 
-i=$SLURM_ARRAY_TASK_ID
+#i=$SLURM_ARRAY_TASK_ID
+sample=$1
+i=$2
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
 
-DBSNP=~/Murray/Bioinformatics/Reference_Files/ALL.wgs.dbsnp.build135.snps.sites.vcf.gz
-MILLS=~/Murray/Bioinformatics/Reference_Files/ALL.wgs.indels_mills_devine_hg19_leftAligned_collapsed_double_hit.indels.sites.vcf.gz
-INDELS=~/Murray/Bioinformatics/Reference_Files/ALL.wgs.low_coverage_vqsr.20101123.indels.sites.vcf.gz
-REF=~/Murray/Bioinformatics/Reference_Files/FASTA/hs37d5/hs37d5.fa
-
+DBSNP=~/nesi00225/reference_files/resource_bundle2014/dbsnp_138.b37.vcf.gz
+MILLS=~/nesi00225/reference_files/resource_bundle2014/Mills_and_1000G_gold_standard.indels.b37.vcf
+INDELS=~/nesi00225/reference_files/resource_bundle2014/1000G_phase1.indels.b37.vcf
+REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
 
 DIR=$SLURM_SUBMIT_DIR
 module load GATK/3.4-46
 
-echo "srun java -Xmx30g -jar $GATK \
+srun java -Xmx30g -jar $GATK \
 	-T IndelRealigner \
 	-R $REF \
-	-I dedup_reads.bam \
-	-o realigned_reads_${i}.bam \
-	-targetIntervals output.intervals \
+	-I ${sample}_dedup_reads.bam \
+	-o ${sample}_realigned_reads_${i}.bam \
+	-targetIntervals ${sample}_output.intervals \
 	-known ${MILLS} \
 	-known ${INDELS} \
 	-LOD 5.0 \
 	-model USE_READS \
-	-log realign${i}.log \
+	-log ${sample}_realign${i}.log \
 	-l INFO \
-	-L ${i}"
+	-L ${i}
 	 
 

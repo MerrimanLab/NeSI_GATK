@@ -15,6 +15,7 @@
 # University of Otago
 # 20 Oct 2015
 
+sample=$1
 
 # start first part of workflow where full genome has to be used
 TASKS="s1_align.sl s2_sortSam.sl s3_markdup.sl s4_index.sl s5_indelTarget.sl"
@@ -24,8 +25,8 @@ for TASK in $TASKS ; do
     if [ -n "$DEPENDENCY" ] ; then
         JOB_CMD="$JOB_CMD --dependency afterok:$DEPENDENCY"
     fi
-    JOB_CMD="$JOB_CMD $TASK"
-    echo -n "Running command: $JOB_CMD  "
+    JOB_CMD="$JOB_CMD $TASK $sample"
+    echo -n "Running command: $JOB_CMD "
     OUT=`$JOB_CMD`
     echo "Result: $OUT"
     DEPENDENCY=`echo $OUT | awk '{print $4}'`
@@ -33,17 +34,17 @@ done
 
 
 #run by chromosome
+for chr in $(seq 1 22); do
 TASKS="s6_realign.sl s7_baserecal.sl s8_applyrecal.sl s9_haplotypecaller.sl"
-for chr in $(seq 1 2); do
 	for TASK in $TASKS ; do
     	JOB_CMD="sbatch"
     	if [ -n "$DEPENDENCY" ] ; then
         	JOB_CMD="$JOB_CMD --dependency afterok:$DEPENDENCY"
     	fi
-    	JOB_CMD="$JOB_CMD $TASK"
+    	JOB_CMD="$JOB_CMD $TASK $sample $chr"
     	echo -n "Running command: $JOB_CMD  "
     	OUT=`$JOB_CMD`
     	echo "Result: $OUT"
-    	DEPENDENCY=`echo $OUT | awk -v i=$chr '{print $4"_"i}'`
+    	DEPENDENCY=`echo $OUT | awk '{print $4}'`
 	done
 done
