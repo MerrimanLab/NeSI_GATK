@@ -33,7 +33,7 @@ INDELS=~/nesi00225/reference_files/resource_bundle2014/1000G_phase1.indels.b37.v
 REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
 
 
-srun java -Xmx30g -jar $GATK \
+if ! srun java -Xmx30g -jar $GATK \
 	-T BaseRecalibrator \
 	-R $REF \
 	-I ${sample}_realigned_reads_${i}.bam \
@@ -47,5 +47,9 @@ srun java -Xmx30g -jar $GATK \
 	-cov CycleCovariate \
 	-cov ContextCovariate \
 	-log ${sample}_baserecal${i}.log \
-	-L ${i}
+	-L ${i} ; then
 
+	echo "base recal on chr $i failed"
+	exit 1
+fi
+sbatch s8_applyrecal.sl $sample $i

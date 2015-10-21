@@ -32,7 +32,7 @@ REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
 DIR=$SLURM_SUBMIT_DIR
 module load GATK/3.4-46
 
-srun java -jar -Xmx30g $GATK \
+if ! srun java -jar -Xmx30g $GATK \
 	-T HaplotypeCaller \
 	-R $REF \
 	-I ${sample}_baserecal_reads_${i}.bam \
@@ -42,7 +42,11 @@ srun java -jar -Xmx30g $GATK \
 	--variant_index_parameter 128000 \
 	--dbsnp $DBSNP \
 	-o ~/nesi00225/${sample}_${i}.raw.snps.indels.g.vcf \
-	-nct 12
+	-nct 12 ; then
+
+	echo "haplotypecalled on chr $i failed"
+	exit 1
+fi
 
 file=~/nesi00225/${sample}_${i}.raw.snps.indels.g.vcf
 label=${sample}_${i}_vcf

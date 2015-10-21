@@ -22,4 +22,8 @@ sample=$1
 DIR=$SLURM_SUBMIT_DIR
 module load picard/1.140
 
-srun java -Xmx3g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=${sample}_dedup_reads.bam
+if ! srun java -Xmx3g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=${sample}_dedup_reads.bam ; then
+	echo "index failed"
+	exit 1
+fi
+sbatch ~/nesi00225/nesi_gatk/s5_indelTarget.sl $sample

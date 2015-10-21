@@ -19,5 +19,8 @@ DIR=$SLURM_SUBMIT_DIR
 
 module load picard/1.140
 
-srun java -Xmx3g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=${sample}_sorted_reads.bam OUTPUT=${sample}_dedup_reads.bam METRICS_FILE=metrics.txt TMP_DIR=$TMP_DIR
-
+if ! srun java -Xmx3g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=${sample}_sorted_reads.bam OUTPUT=${sample}_dedup_reads.bam METRICS_FILE=metrics.txt TMP_DIR=$TMP_DIR ; then
+	echo "markdup failed"
+	exit 1
+fi
+sbatch ~/nesi00225/nesi_gatk/s4_index.sl $sample

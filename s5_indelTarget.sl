@@ -30,7 +30,7 @@ REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
 DIR=$SLURM_SUBMIT_DIR
 module load GATK/3.4-46
 
-srun java -Xmx30g -jar $GATK \
+if ! srun java -Xmx30g -jar $GATK \
 	-T RealignerTargetCreator \
 	-R $REF \
 	-I ${sample}_dedup_reads.bam \
@@ -39,6 +39,11 @@ srun java -Xmx30g -jar $GATK \
 	-known ${INDELS} \
 	-l INFO \
 	-nt 12 \
-	-log ${sample}_target.log
-	 
+	-log ${sample}_target.log ; then
 
+	echo "indel target creator failed"
+	exit 1
+fi
+for chr in {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,MT}; do	 
+	sbatch ~/nesi00225/nesi_gatk/s6_realign.sl $sample $chr
+done

@@ -31,7 +31,7 @@ REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
 DIR=$SLURM_SUBMIT_DIR
 module load GATK/3.4-46
 
-srun java -Xmx30g -jar $GATK \
+if ! srun java -Xmx30g -jar $GATK \
 	-T PrintReads \
 	-R $REF \
 	-BQSR ${sample}_recal_data${i}.grp \
@@ -39,4 +39,9 @@ srun java -Xmx30g -jar $GATK \
 	-o ${sample}_baserecal_reads_${i}.bam \
 	-l INFO \
 	-log printreads${i}.log \
-	-L ${i}
+	-L ${i} ; then
+
+	echo "print reads on chr $i failed"
+	exit 1
+fi
+sbatch ~/nesi00225/nesi_gatk/s9_haplotypecaller.sl $sample $i

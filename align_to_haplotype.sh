@@ -32,10 +32,12 @@ for TASK in $TASKS ; do
     DEPENDENCY=`echo $OUT | awk '{print $4}'`
 done
 
+LAST_GENOME_DEPENDENCY=$DEPENDENCY
 
 #run by chromosome
 for chr in $(seq 1 22); do
 TASKS="s6_realign.sl s7_baserecal.sl s8_applyrecal.sl s9_haplotypecaller.sl"
+	DEPENDENCY=$LAST_GENOME_DEPENDENCY
 	for TASK in $TASKS ; do
     	JOB_CMD="sbatch"
     	if [ -n "$DEPENDENCY" ] ; then

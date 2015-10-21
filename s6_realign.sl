@@ -32,7 +32,7 @@ REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
 DIR=$SLURM_SUBMIT_DIR
 module load GATK/3.4-46
 
-srun java -Xmx30g -jar $GATK \
+if ! srun java -Xmx30g -jar $GATK \
 	-T IndelRealigner \
 	-R $REF \
 	-I ${sample}_dedup_reads.bam \
@@ -44,6 +44,10 @@ srun java -Xmx30g -jar $GATK \
 	-model USE_READS \
 	-log ${sample}_realign${i}.log \
 	-l INFO \
-	-L ${i}
-	 
+	-L ${i} ; then
 
+	echo "realign failed"
+	exit 1
+fi
+	 
+sbatch ~/nesi00225/nesi_gatk/s7_baserecal.sl $sample $i

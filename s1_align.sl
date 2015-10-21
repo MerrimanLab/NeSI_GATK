@@ -2,7 +2,7 @@
 #SBATCH -J s1_align
 #SBATCH -A uoo00008         # Project Account
 #SBATCH --time=15:00:00     # Walltime
-#SBATCH --mem-per-cpu=8000  # memory/cpu (in MB)
+#SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=12   # 12 OpenMP Threads
 #SBATCH --nodes=1
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
@@ -28,5 +28,9 @@ module load SAMtools/1.2-goolf-1.5.14
 REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
 
 RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
-bwa mem -M -t 12 -R $RG $REF 30x_1.fastq.gz 30x_2.fastq.gz | samtools view -bh - >  ${sample}_aligned_reads.bam
+if ! bwa mem -M -t 12 -R $RG $REF 30x_1.fastq.gz 30x_2.fastq.gz | samtools view -bh - >  ${sample}_aligned_reads.bam ; then
+	echo "BWA failed"
+	exit 1
+fi
+sbatch ~/nesi00225/nesi_gatk/S2_sortSam.sl $sample
 
