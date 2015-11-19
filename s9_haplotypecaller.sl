@@ -1,11 +1,12 @@
 #!/bin/bash
 #SBATCH -J s9_haplotypeCaller
-#SBATCH -A uoo00008         # Project Account
+#SBATCH -A nesi00225         # Project Account
 #SBATCH --time=15:00:00     # Walltime
 #SBATCH --mem-per-cpu=4048  # memory/cpu (in MB)
-#SBATCH --cpus-per-task=12   # 12 OpenMP Threads
+#SBATCH --cpus-per-task=16   # 12 OpenMP Threads
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=ALL
+#SBATCH -C sb
 
 
 # Murray Cadzow
@@ -24,7 +25,7 @@ i=$2
 
 
 
-DBSNP=~/nesi00225/reference_files/resource_bundle2014/dbsnp_138.b37.vcf.gz
+DBSNP=~/nesi00225/reference_files/resource_bundle2014/dbsnp_138.b37.vcf
 MILLS=~/nesi00225/reference_files/resource_bundle2014/Mills_and_1000G_gold_standard.indels.b37.vcf
 INDELS=~/nesi00225/reference_files/resource_bundle2014/1000G_phase1.indels.b37.vcf
 REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
@@ -42,13 +43,14 @@ if ! srun java -jar -Xmx30g $GATK \
 	--variant_index_parameter 128000 \
 	--dbsnp $DBSNP \
 	-o ~/nesi00225/${sample}_${i}.raw.snps.indels.g.vcf \
-	-nct 12 ; then
+	-nct 16 ; then
 
 	echo "haplotypecalled on chr $i failed"
 	exit 1
 fi
 
-file=~/nesi00225/${sample}_${i}.raw.snps.indels.g.vcf
+filename=${sample}_${i}.raw.snps.indels.g.vcf
+
 label=${sample}_${i}_vcf
-echo "transfer --perf-cc 4 --perf-p 8 --label '$label' -- nz#uoa/~/nesi225/${file} murraycadzow#biochemcompute/~/Murray/finished/${file} " | ssh -i ~/.ssh/git murraycadzow@cli.globusonline.org
+#echo "transfer --perf-cc 4 --perf-p 8 --label '$label' -- nz#uoa/~/nesi00225/${filename} murraycadzow#biochemcompute/~/Murray/Bioinformatics/working_dir/nesi_retrieved/sb/${filename} " | ssh -i ~/.ssh/git murraycadzow@cli.globusonline.org
 echo "file transfer begun"

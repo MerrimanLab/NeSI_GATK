@@ -1,11 +1,12 @@
 #!/bin/bash
 #SBATCH -J s8_printReads
-#SBATCH -A uoo00008         # Project Account
+#SBATCH -A nesi00225         # Project Account
 #SBATCH --time=15:00:00     # Walltime
 #SBATCH --mem-per-cpu=31024  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=ALL
+#SBATCH -C sb
 
 
 # Murray Cadzow
@@ -23,7 +24,7 @@ i=$2
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
 
-DBSNP=~/nesi00225/reference_files/resource_bundle2014/dbsnp_138.b37.vcf.gz
+DBSNP=~/nesi00225/reference_files/resource_bundle2014/dbsnp_138.b37.vcf
 MILLS=~/nesi00225/reference_files/resource_bundle2014/Mills_and_1000G_gold_standard.indels.b37.vcf
 INDELS=~/nesi00225/reference_files/resource_bundle2014/1000G_phase1.indels.b37.vcf
 REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
@@ -44,4 +45,6 @@ if ! srun java -Xmx30g -jar $GATK \
 	echo "print reads on chr $i failed"
 	exit 1
 fi
-sbatch ~/nesi00225/nesi_gatk/s9_haplotypecaller.sl $sample $i
+
+JOB=$(sbatch -J s9_haplotypecaller_chr${i} ~/nesi00225/nesi_gatk/s9_haplotypecaller.sl $sample $i)
+echo "chr $i haplotypecaller job submitted $JOB"

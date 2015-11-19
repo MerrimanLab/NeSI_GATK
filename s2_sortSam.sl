@@ -1,11 +1,12 @@
 #!/bin/bash
 #SBATCH -J s2_SortSam
-#SBATCH -A uoo00008         # Project Account
+#SBATCH -A nesi00225         # Project Account
 #SBATCH --time=15:00:00     # Walltime
-#SBATCH --mem-per-cpu=4048  # memory/cpu (in MB)
+#SBATCH --mem-per-cpu=9048  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=ALL
+#SBATCH -C sb
 
 
 # Murray Cadzow
@@ -21,8 +22,10 @@ DIR=$SLURM_SUBMIT_DIR
 module load picard/1.140
 
 
-if ! srun java -Xmx3g -jar $EBROOTPICARD/picard.jar SortSam INPUT=${sample}_aligned_reads.bam OUTPUT=${sample}_sorted_reads.bam SORT_ORDER=coordinate TMP_DIR=$TMP_DIR ; then
-	echo "sort sam failed
+if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=${sample}_aligned_reads.bam OUTPUT=${sample}_sorted_reads.bam SORT_ORDER=coordinate TMP_DIR=$DIR ; then
+	echo "sort sam failed"
 	exit 1
 fi
 sbatch ~/nesi00225/nesi_gatk/s3_markdup.sl $sample
+rm ${sample}_aligned_reads.bam
+

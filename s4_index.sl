@@ -1,11 +1,12 @@
 #!/bin/bash
 #SBATCH -J s4_Index 
-#SBATCH -A uoo00008         # Project Account
+#SBATCH -A nesi00225         # Project Account
 #SBATCH --time=15:00:00     # Walltime
-#SBATCH --mem-per-cpu=4048  # memory/cpu (in MB)
+#SBATCH --mem-per-cpu=9048  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=ALL
+#SBATCH -C sb
 
 
 # Murray Cadzow
@@ -22,7 +23,7 @@ sample=$1
 DIR=$SLURM_SUBMIT_DIR
 module load picard/1.140
 
-if ! srun java -Xmx3g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=${sample}_dedup_reads.bam ; then
+if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=${sample}_dedup_reads.bam ; then
 	echo "index failed"
 	exit 1
 fi
