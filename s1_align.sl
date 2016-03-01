@@ -33,5 +33,13 @@ if ! bwa mem -M -t 16 -R $RG $REF $file1 $file2 2> ${sample}_bwa.log | samtools 
 	echo "BWA failed"
 	exit 1
 fi
+
+#test to make sure aligned file is approximately the size we would expect
+# MAKE ACTUAL SYNTAX for if condition - currently psuedo condition
+# take new file and see if it is similar to the sum of the input files
+#if [ expr $(stat --format %s ${sample}_aligned_reads.bam)  - $(expr $(stat --format %s $file1) + $(stat --format %s $file2)) ]; then # current observation is that bam should be approximately sum of input file sizes
+#	echo "File size too small"
+#	exit 1
+#fi
 sbatch ~/nesi00225/nesi_gatk/s2_sortSam.sl $sample
 
