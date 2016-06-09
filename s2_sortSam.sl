@@ -1,17 +1,21 @@
 #!/bin/bash
-#SBATCH -J s2_SortSam
-#SBATCH -A nesi00225         # Project Account
+#SBATCH -J s1_align
+#SBATCH -A uoo00053         # Project Account
 #SBATCH --time=15:00:00     # Walltime
-#SBATCH --mem-per-cpu=9048  # memory/cpu (in MB)
-#SBATCH --cpus-per-task=1   # 12 OpenMP Threads
-#SBATCH --mail-user=murray.cadzow@otago.ac.nz
+#SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
+#SBATCH --cpus-per-task=16   # 12 OpenMP Threads
+#SBATCH --nodes=1
+#SBATCH --mail-user=matt.bixley@otago.ac.nz
 #SBATCH --mail-type=ALL
 #SBATCH -C sb
-
 
 # Murray Cadzow
 # University of Otago
 # 20 Oct 2015
+
+# Matt Bixley
+# University of Otago
+# Jun 2016
 sample=$1
 export OPENBLAS_MAIN_FREE=1
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
