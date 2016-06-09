@@ -26,7 +26,7 @@ DIR=$SLURM_SUBMIT_DIR
 module load BWA/0.7.12-goolf-1.5.14
 module load SAMtools/1.2-goolf-1.5.14
 
-REF=~/nesi00225/reference_files/hs37d5/hs37d5.fa
+REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 
 RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
 if ! bwa mem -M -t 16 -R $RG $REF $file1 $file2 2> ${sample}_bwa.log | samtools view -bh - >  ${sample}_aligned_reads.bam ; then
