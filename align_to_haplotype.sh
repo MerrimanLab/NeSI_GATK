@@ -15,6 +15,10 @@
 # University of Otago
 # 20 Oct 2015
 
+# Matt Bixley
+# University of Otago
+# June 2016
+
 sample=$1
 
 # start first part of workflow where full genome has to be used
