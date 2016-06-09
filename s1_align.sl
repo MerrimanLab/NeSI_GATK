@@ -5,13 +5,17 @@
 #SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=16   # 12 OpenMP Threads
 #SBATCH --nodes=1
-#SBATCH --mail-user=murray.cadzow@otago.ac.nz
+#SBATCH --mail-user=matt.bixley@otago.ac.nz
 #SBATCH --mail-type=ALL
 #SBATCH -C sb
 
 # Murray Cadzow
 # University of Otago
 # 20 Oct 2015
+
+# Matt Bixley
+# University of Otago
+# Jun 2016
 
 sample=$1
 file1=$2
