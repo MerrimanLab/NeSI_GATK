@@ -23,6 +23,6 @@ export OPENBLAS_MAIN_FREE=1
 DIR=$SLURM_SUBMIT_DIR
 
 echo "globus endpoint1 endpoint2 $file"
-echo "transfer --perf-cc 4 --perf-p 8 --label '$label' -- nz#uoa/~/nesi00225/${file} murraycadzow#biochemcompute/~/Murray/Bioinformatics/working_dir/nesi_retrieved/gatk_pipeline/${file} " | ssh -i ~/.ssh/git murraycadzow@cli.globusonline.org
+echo "transfer --perf-cc 4 --perf-p 8 --label '$label' -- nz#uoa/~/uoo00053/${file} murraycadzow#biochemcompute/~/Murray/Bioinformatics/working_dir/nesi_retrieved/gatk_pipeline/${file} " | ssh -i ~/.ssh/git murraycadzow@cli.globusonline.org
 
 
