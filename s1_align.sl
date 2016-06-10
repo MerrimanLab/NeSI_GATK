@@ -45,5 +45,5 @@ fi
 #	echo "File size too small"
 #	exit 1
 #fi
-sbatch ~/nesi00225/nesi_gatk/s2_sortSam.sl $sample
+sbatch ~/s2_sortSam.sl $sample
 
