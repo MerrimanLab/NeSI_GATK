@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J s1_align
+#SBATCH -J s2_sortSam.sl
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=15:00:00     # Walltime
 #SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
@@ -16,6 +16,7 @@
 # Matt Bixley
 # University of Otago
 # Jun 2016
+
 sample=$1
 export OPENBLAS_MAIN_FREE=1
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
@@ -30,6 +31,6 @@ if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=${sample}_alig
 	echo "sort sam failed"
 	exit 1
 fi
-sbatch ~/nesi00225/nesi_gatk/s3_markdup.sl $sample
+sbatch ~/s3_markdup.sl $sample
 rm ${sample}_aligned_reads.bam
 
