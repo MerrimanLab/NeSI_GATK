@@ -1,0 +1,18 @@
+
+#sample=$1
+#file1=$2
+#file2=$3
+sample=FR07921700
+file1=~/uoo00053/RawSeq/HHKLKCCXX_1_151126_FR07921700_Homo-sapiens__R_151102_MANPHI_FGS_M001_R1.fastq.gz
+file2=~/uoo00053/RawSeq/HHKLKCCXX_1_151126_FR07921700_Homo-sapiens__R_151102_MANPHI_FGS_M001_R2.fastq.gz
+
+GATK=~/uoo00053/GATK3.6/GenomeAnalysisTK.jar
+module load Java/1.8.0_5
+module load BWA/0.7.12-goolf-1.5.14
+module load SAMtools/1.3-foss-2015a
+module load picard/2.1.0
+
+REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
+SAMPWORK=~/uoo00053/working/${sample}/working/
+SAMPFIN=~/uoo00053/working/${sample}/final/
+
