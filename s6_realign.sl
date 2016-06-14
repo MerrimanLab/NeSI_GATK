@@ -31,7 +31,8 @@ INDELS=~/uoo00053/reference_files/resource_bundle2014/1000G_phase1.indels.b37.vc
 REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 
 DIR=$SLURM_SUBMIT_DIR
-module load GATK/3.4-46
+GATK=~/uoo00053/GATK3.6/GenomeAnalysisTK.jar
+module load Java/1.8.0_5
 
 if ! srun java -Xmx30g -jar $GATK \
 	-T IndelRealigner \
