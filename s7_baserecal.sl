@@ -26,7 +26,8 @@ i=$2
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
 DIR=$SLURM_SUBMIT_DIR
-module load GATK/3.4-46
+GATK=~/uoo00053/GATK3.6/GenomeAnalysisTK.jar
+module load Java/1.8.0_5
 
 DBSNP=~/uoo00053/reference_files/resource_bundle2014/dbsnp_138.b37.vcf
 MILLS=~/uoo00053/reference_files/resource_bundle2014/Mills_and_1000G_gold_standard.indels.b37.vcf
