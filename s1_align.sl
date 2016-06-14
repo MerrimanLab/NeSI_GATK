@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J s1_align
+#SBATCH -J s1_align.sl
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=15:00:00     # Walltime
 #SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
@@ -29,21 +29,21 @@ export OPENBLAS_MAIN_FREE=1
 DIR=$SLURM_SUBMIT_DIR
 module load BWA/0.7.12-goolf-1.5.14
 module load SAMtools/1.2-goolf-1.5.14
+module load picard/1.140
 
 REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 
 RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
-if ! bwa mem -M -t 16 -R $RG $REF $file1 $file2 2> ${sample}_bwa.log | samtools view -bh - >  ${sample}_aligned_reads.bam ; then
-	echo "BWA failed"
-	exit 1
+if ! bwa mem -M -t 16 -R $RG $REF $file1 $file2 2> ~/uoo00053/working/${sample}_bwa.log | samtools view -bh - > ~/uoo00053/working/${sample}_aligned_reads.bam ; then
+        echo "BWA failed"
+
+java Xmx8g -jar picard.jar CollectAlignmentSummaryMetrics \
+        REFERENCE=$REF \
+        INPUT=~/uoo00053/working/${sample}_aligned_reads.bam \
+        OUTPUT=~/uoo00053/working/${sample}_bam_summary.txt
+
+        exit 1
 fi
 
-#test to make sure aligned file is approximately the size we would expect
-# MAKE ACTUAL SYNTAX for if condition - currently psuedo condition
-# take new file and see if it is similar to the sum of the input files
-#if [ expr $(stat --format %s ${sample}_aligned_reads.bam)  - $(expr $(stat --format %s $file1) + $(stat --format %s $file2)) ]; then # current observation is that bam should be approximately sum of input file sizes
-#	echo "File size too small"
-#	exit 1
-#fi
 sbatch ~/s2_sortSam.sl $sample
 
