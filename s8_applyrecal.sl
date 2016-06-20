@@ -37,11 +37,11 @@ module load Java/1.8.0_5
 if ! srun java -Xmx30g -jar $GATK \
 	-T PrintReads \
 	-R $REF \
-	-BQSR ${sample}_recal_data${i}.grp \
-	-I ${sample}_realigned_reads_${i}.bam \
-	-o ${sample}_baserecal_reads_${i}.bam \
+	-BQSR ~/uoo00053/working/${sample}_recal_data${i}.grp \
+	-I ~/uoo00053/working/${sample}_realigned_reads_${i}.bam \
+	-o ~/uoo00053/working/${sample}_baserecal_reads_${i}.bam \
 	-l INFO \
-	-log printreads${i}.log \
+	-log ~/uoo00053/working/printreads${i}.log \
 	-L ${i} ; then
 
 	echo "print reads on chr $i failed"
