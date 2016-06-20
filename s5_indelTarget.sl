@@ -36,8 +36,8 @@ module load Java/1.8.0_5
 if ! srun java -Xmx30g -jar $GATK \
 	-T RealignerTargetCreator \
 	-R $REF \
-	-I ${sample}_dedup_reads.bam \
-	-o ${sample}_output.intervals \
+	-I ~/uoo00053/working/${sample}_dedup_reads.bam \
+	-o ~/uoo00053/working/${sample}_output.intervals \
 	-known ${MILLS} \
 	-known ${INDELS} \
 	-l INFO \
