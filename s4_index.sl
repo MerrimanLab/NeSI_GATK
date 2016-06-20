@@ -23,9 +23,9 @@ sample=$1
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
 DIR=$SLURM_SUBMIT_DIR
-module load picard/1.140
+module load picard/2.1.0
 
-if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=${sample}_dedup_reads.bam ; then
+if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=~/uoo00053/working/${sample}_dedup_reads.bam ; then
 	echo "index failed"
 	exit 1
 fi
