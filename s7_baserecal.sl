@@ -37,8 +37,8 @@ REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 if ! srun java -Xmx30g -jar $GATK \
 	-T BaseRecalibrator \
 	-R $REF \
-	-I ${sample}_realigned_reads_${i}.bam \
-	-o ${sample}_recal_data${i}.grp \
+	-I ~/uoo00053/working/${sample}_realigned_reads_${i}.bam \
+	-o ~/uoo00053/working/${sample}_recal_data${i}.grp \
 	-knownSites $DBSNP \
 	-knownSites $MILLS \
 	-knownSites $INDELS \
@@ -47,7 +47,7 @@ if ! srun java -Xmx30g -jar $GATK \
 	-cov QualityScoreCovariate \
 	-cov CycleCovariate \
 	-cov ContextCovariate \
-	-log ${sample}_baserecal${i}.log \
+	-log ~/uoo00053/working/${sample}_baserecal${i}.log \
 	-L ${i} ; then
 
 	echo "base recal on chr $i failed"
