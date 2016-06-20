@@ -25,7 +25,7 @@ export OPENBLAS_MAIN_FREE=1
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
 DIR=$SLURM_SUBMIT_DIR
-module load picard/2.1.5
+module load picard/2.1.0
 
 if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=~/uoo00053/working/${sample}_aligned_reads.bam OUTPUT=~/uoo00053/working/${sample}_sorted_reads.bam SORT_ORDER=coordinate TMP_DIR=$DIR ; then
 	echo "sort sam failed"
