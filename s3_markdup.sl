@@ -22,11 +22,11 @@ export OPENBLAS_MAIN_FREE=1
 
 DIR=$SLURM_SUBMIT_DIR
 
-module load picard/1.140
+module load picard/2.1.0
 
-if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=${sample}_sorted_reads.bam OUTPUT=${sample}_dedup_reads.bam METRICS_FILE=metrics.txt TMP_DIR=$DIR ; then
+if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=~/uoo00053/working/${sample}_sorted_reads.bam OUTPUT=~/uoo00053/working/${sample}_dedup_reads.bam METRICS_FILE=metrics.txt TMP_DIR=$DIR ; then
 	echo "markdup failed"
 	exit 1
 fi
 sbatch ~/s4_index.sl $sample
-rm ${sample}_sorted_reads.bam
+#rm ${sample}_sorted_reads.bam #### uncomment later
