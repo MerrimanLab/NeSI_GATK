@@ -47,7 +47,7 @@ if ! srun java -Xmx30g -jar $GATK \
 	echo "indel target creator failed"
 	exit 1
 fi
-for chr in {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,MT}; do	 
+for chr in {21,22}; do	 
 	sbatch -J s6_realign_chr${chr} ~/s6_realign.sl $sample $chr
 	echo "job for chr $chr submitted"
 	sleep 1 
