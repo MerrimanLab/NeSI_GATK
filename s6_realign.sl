@@ -37,14 +37,14 @@ module load Java/1.8.0_5
 if ! srun java -Xmx30g -jar $GATK \
 	-T IndelRealigner \
 	-R $REF \
-	-I ${sample}_dedup_reads.bam \
-	-o ${sample}_realigned_reads_${i}.bam \
-	-targetIntervals ${sample}_output.intervals \
+	-I ~/uoo00053/working/${sample}_dedup_reads.bam \
+	-o ~/uoo00053/working/${sample}_realigned_reads_${i}.bam \
+	-targetIntervals ~/uoo00053/working/${sample}_output.intervals \
 	-known ${MILLS} \
 	-known ${INDELS} \
 	-LOD 5.0 \
 	-model USE_READS \
-	-log ${sample}_realign${i}.log \
+	-log ~/uoo00053/working/${sample}_realign${i}.log \
 	-l INFO \
 	-L ${i} ; then
 
