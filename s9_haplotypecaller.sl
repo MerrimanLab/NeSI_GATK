@@ -37,13 +37,13 @@ module load Java/1.8.0_5
 if ! srun java -jar -Xmx30g $GATK \
 	-T HaplotypeCaller \
 	-R $REF \
-	-I ${sample}_baserecal_reads_${i}.bam \
+	-I ~/uoo00053/working/${sample}_baserecal_reads_${i}.bam \
 	-L ${i} \
 	--emitRefConfidence GVCF \
 	--variant_index_type LINEAR \
 	--variant_index_parameter 128000 \
 	--dbsnp $DBSNP \
-	-o ~/nesi00225/${sample}_${i}.raw.snps.indels.g.vcf \
+	-o ~/uoo00053/final/${sample}_${i}.raw.snps.indels.g.vcf \
 	-nct 16 ; then
 
 	echo "haplotypecalled on chr $i failed"
@@ -53,5 +53,5 @@ fi
 filename=${sample}_${i}.raw.snps.indels.g.vcf
 
 label=${sample}_${i}_vcf
-#echo "transfer --perf-cc 4 --perf-p 8 --label '$label' -- nz#uoa/~/nesi00225/${filename} murraycadzow#biochemcompute/~/Murray/Bioinformatics/working_dir/nesi_retrieved/sb/${filename} " | ssh -i ~/.ssh/git murraycadzow@cli.globusonline.org
+#echo "transfer --perf-cc 4 --perf-p 8 --label '$label' -- nz#uoa/~/uoo00053/final/${filename} murraycadzow#biochemcompute/~/Murray/Bioinformatics/working_dir/nesi_retrieved/sb/${filename} " | ssh -i ~/.ssh/git murraycadzow@cli.globusonline.org
 echo "file transfer begun"
