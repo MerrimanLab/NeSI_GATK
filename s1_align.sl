@@ -32,7 +32,7 @@ export OPENBLAS_MAIN_FREE=1
 DIR=$SLURM_SUBMIT_DIR
 module load BWA/0.7.12-goolf-1.5.14
 module load SAMtools/1.2-goolf-1.5.14
-module load picard/1.140
+module load picard/2.1.0
 
 REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 
