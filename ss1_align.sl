@@ -26,13 +26,13 @@ DIR=$SLURM_SUBMIT_DIR
 module load SpeedSeq/20160531-foss-2015a
 
 REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
-RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1
+RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
 
 speedseq align \
     -o ${sample} \
     -R $RG \
-    ${REF} \
-    ${file1} \
-    ${file2}
+    $REF \
+    $file1 \
+    $file2
     
     
