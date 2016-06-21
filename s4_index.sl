@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J s4_Index 
-#SBATCH -A uoo00052         # Project Account
+#SBATCH -A uoo00053         # Project Account
 #SBATCH --time=15:00:00     # Walltime
 #SBATCH --mem-per-cpu=9048  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
@@ -29,4 +29,4 @@ if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=~/uoo000
 	echo "index failed"
 	exit 1
 fi
-sbatch ~/s5_indelTarget.sl $sample
+sbatch ~/NeSI_GATK/s5_indelTarget.sl $sample

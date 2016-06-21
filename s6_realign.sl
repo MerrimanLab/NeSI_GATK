@@ -52,4 +52,4 @@ if ! srun java -Xmx30g -jar $GATK \
 	exit 1
 fi
 	 
-sbatch -J s7_baserecal_chr${i} ~/s7_baserecal.sl $sample $i
+sbatch -J s7_baserecal_chr${i} ~/NeSI_GATK/s7_baserecal.sl $sample $i

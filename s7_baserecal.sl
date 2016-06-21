@@ -53,4 +53,4 @@ if ! srun java -Xmx30g -jar $GATK \
 	echo "base recal on chr $i failed"
 	exit 1
 fi
-sbatch -J s8_applyrecal_chr${i} ~/s8_applyrecal.sl $sample $i
+sbatch -J s8_applyrecal_chr${i} ~/NeSI_GATK/s8_applyrecal.sl $sample $i

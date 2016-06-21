@@ -48,5 +48,5 @@ if ! srun java -Xmx30g -jar $GATK \
 	exit 1
 fi
 
-JOB=$(sbatch -J s9_haplotypecaller_chr${i} ~/s9_haplotypecaller.sl $sample $i)
+JOB=$(sbatch -J s9_haplotypecaller_chr${i} ~/NeSI_GATK/s9_haplotypecaller.sl $sample $i)
 echo "chr $i haplotypecaller job submitted $JOB"

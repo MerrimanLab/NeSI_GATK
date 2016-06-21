@@ -48,7 +48,7 @@ if ! srun java -Xmx30g -jar $GATK \
 	exit 1
 fi
 for chr in {21,22}; do	 
-	sbatch -J s6_realign_chr${chr} ~/s6_realign.sl $sample $chr
+	sbatch -J s6_realign_chr${chr} ~/NeSI_GATK/s6_realign.sl $sample $chr
 	echo "job for chr $chr submitted"
 	sleep 1 
 done
