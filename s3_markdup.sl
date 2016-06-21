@@ -28,5 +28,5 @@ if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=~/uoo0
 	echo "markdup failed"
 	exit 1
 fi
-sbatch ~/s4_index.sl $sample
+sbatch ~/NeSI_GATK/s4_index.sl $sample
 #rm ${sample}_sorted_reads.bam #### uncomment later

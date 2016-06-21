@@ -31,6 +31,6 @@ if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=~/uoo00053/wor
 	echo "sort sam failed"
 	exit 1
 fi
-sbatch ~/s3_markdup.sl $sample
+sbatch ~/NeSI_GATK/s3_markdup.sl $sample
 #rm ${sample}_aligned_reads.bam   ###uncomment after a test run
 
