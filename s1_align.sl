@@ -39,12 +39,6 @@ REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
 if ! bwa mem -M -t 16 -R $RG $REF $file1 $file2 2> ~/uoo00053/working/${sample}_bwa.log | samtools view -bh - > ~/uoo00053/working/${sample}_aligned_reads.bam ; then
         echo "BWA failed"
-
-java -Xmx8g -jar picard.jar CollectAlignmentSummaryMetrics \
-        REFERENCE=$REF \
-        INPUT=~/uoo00053/working/${sample}_aligned_reads.bam \
-        OUTPUT=~/uoo00053/working/${sample}_bam_summary.txt
-
         exit 1
 fi
 
