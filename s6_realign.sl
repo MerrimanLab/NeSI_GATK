@@ -25,9 +25,9 @@ i=$2
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
-DBSNP=~/uoo00053/reference_files/resource_bundle2014/dbsnp_138.b37.vcf
-MILLS=~/uoo00053/reference_files/resource_bundle2014/Mills_and_1000G_gold_standard.indels.b37.vcf
-INDELS=~/uoo00053/reference_files/resource_bundle2014/1000G_phase1.indels.b37.vcf
+DBSNP=~/uoo00053/reference_files/dbsnp_138.b37.vcf
+MILLS=~/uoo00053/reference_files/Mills_and_1000G_gold_standard.indels.b37.vcf
+INDELS=~/uoo00053/reference_files/1000G_phase1.indels.b37.vcf
 REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 
 DIR=$SLURM_SUBMIT_DIR
