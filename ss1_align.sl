@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #SBATCH -J s1_align.sl
 #SBATCH -A uoo00053         # Project Account
