@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J s1_align.sl
+#SBATCH -J ss1_align.sl
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=15:00:00     # Walltime
 #SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
