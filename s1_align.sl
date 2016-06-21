@@ -48,5 +48,5 @@ java -Xmx8g -jar picard.jar CollectAlignmentSummaryMetrics \
         exit 1
 fi
 
-sbatch ~/s2_sortSam.sl $sample
+sbatch ~/NeSI_GATK/s2_sortSam.sl $sample
 
