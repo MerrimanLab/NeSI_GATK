@@ -25,7 +25,8 @@ i=$2
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
-DIR=$SLURM_SUBMIT_DIR
+#DIR=$SLURM_SUBMIT_DIR
+DIR=~/uoo00053/working/
 GATK=~/uoo00053/GATK3.6/GenomeAnalysisTK.jar
 module load Java/1.8.0_5
 

@@ -20,8 +20,8 @@
 sample=$1
 export OPENBLAS_MAIN_FREE=1
 
-DIR=$SLURM_SUBMIT_DIR
-
+#DIR=$SLURM_SUBMIT_DIR
+DIR=~/uoo00053/working/
 module load picard/2.1.0
 
 if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=~/uoo00053/working/${sample}_sorted_reads.bam OUTPUT=~/uoo00053/working/${sample}_dedup_reads.bam METRICS_FILE=metrics.txt TMP_DIR=$DIR ; then

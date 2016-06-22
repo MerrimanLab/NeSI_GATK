@@ -22,7 +22,8 @@ sample=$1
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
-DIR=$SLURM_SUBMIT_DIR
+#DIR=$SLURM_SUBMIT_DIR
+DIR=~/uoo00053/working/
 module load picard/2.1.0
 
 if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=~/uoo00053/working/${sample}_dedup_reads.bam ; then
