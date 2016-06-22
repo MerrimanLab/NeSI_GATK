@@ -17,8 +17,8 @@
 # University of Otago
 # Jun 2016
 
-sample=$1
-#sample=FR07921700
+#sample=$1
+sample=FR07921700
 export OPENBLAS_MAIN_FREE=1
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt

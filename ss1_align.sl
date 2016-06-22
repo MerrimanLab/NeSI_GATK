@@ -29,7 +29,7 @@ REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
 
 speedseq align \
-    -o ${sample} \
+    -o ~/uoo00053/speedwork/${sample} \
     -R $RG \
     $REF \
     $file1 \
