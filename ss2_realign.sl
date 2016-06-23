@@ -20,7 +20,7 @@ export OPENBLAS_MAIN_FREE=1
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #DIR=$SLURM_SUBMIT_DIR
-DIR=~/uoo00053/speedwork
+DIR=~/uoo00053/speedwork/
 REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 
 module load SpeedSeq/20160531-foss-2015a
