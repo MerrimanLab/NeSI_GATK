@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J ss2_call_SNVs
+#SBATCH -J ss2_call_SNVs.sl
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=15:00:00     # Walltime
 #SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
@@ -26,7 +26,7 @@ REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 module load SpeedSeq/20160531-foss-2015a
 
 speedseq var \
-    -o ~/uoo00053/speedwork${sample} \
+    -o ~/uoo00053/speedwork/${sample} \
     -w ~/uoo00053/reference_files/hs37d5/hs37d5cs.bed \
     $REF \
     ~/uoo00053/speedwork/${sample}.bam
