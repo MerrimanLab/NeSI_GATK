@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #SBATCH -J ss2_realign.sl
 #SBATCH -A uoo00053         # Project Account
