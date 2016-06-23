@@ -32,6 +32,7 @@ RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
 speedseq align \
     -o ~/uoo00053/speedwork/${sample} \
     -R $RG \
+    -T $DIR \
     $REF \
     $file1 \
     $file2
