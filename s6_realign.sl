@@ -20,7 +20,7 @@ export OPENBLAS_MAIN_FREE=1
 
 #i=$SLURM_ARRAY_TASK_ID
 sample=FR07921700
-i=$1
+i=$2
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
@@ -45,7 +45,7 @@ if ! srun java -Xmx30g -jar $GATK \
 	-known ${INDELS} \
 	-LOD 5.0 \
 	-model USE_READS \
-	-log ~/uoo00053/working/${sample}_realign${i}.log \
+	-log ~/uoo00053/working/${sample}_realign_${i}.log \
 	-l INFO \
 	-L ${i} ; then
 
