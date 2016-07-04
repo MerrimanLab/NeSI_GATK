@@ -34,20 +34,20 @@ DIR=~/uoo00053/working/
 GATK=~/uoo00053/GATK3.6/GenomeAnalysisTK.jar
 module load Java/1.8.0_5
 
-if ! srun java -Xmx30g -jar $GATK \
-	-T RealignerTargetCreator \
-	-R $REF \
-	-I ~/uoo00053/working/${sample}_dedup_reads.bam \
-	-o ~/uoo00053/working/${sample}_output.intervals \
-	-known ${MILLS} \
-	-known ${INDELS} \
-	-l INFO \
-	-nt 16 \
-	-log ${sample}_target.log ; then
-
-	echo "indel target creator failed"
-	exit 1
-fi
+#if ! srun java -Xmx30g -jar $GATK \
+#	-T RealignerTargetCreator \
+#	-R $REF \
+#	-I ~/uoo00053/working/${sample}_dedup_reads.bam \
+#	-o ~/uoo00053/working/${sample}_output.intervals \
+#	-known ${MILLS} \
+#	-known ${INDELS} \
+#	-l INFO \
+#	-nt 16 \
+#	-log ${sample}_target.log ; then
+#
+#	echo "indel target creator failed"
+#	exit 1
+#fi
 for chr in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, X, Y, MT, \
 	GL000207.1, GL000226.1, GL000229.1, GL000231.1, GL000210.1, GL000239.1, GL000235.1, GL000201.1, \
 	GL000247.1, GL000245.1, GL000197.1, GL000203.1, GL000246.1, GL000249.1, GL000196.1, GL000248.1, \
