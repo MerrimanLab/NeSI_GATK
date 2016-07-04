@@ -20,7 +20,7 @@ export OPENBLAS_MAIN_FREE=1
 
 #i=SLURM_ARRAY_TASK_ID
 sample=FR07921700
-i=$2
+i=$1
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
@@ -30,7 +30,7 @@ DIR=~/uoo00053/working/
 GATK=~/uoo00053/GATK3.6/GenomeAnalysisTK.jar
 module load Java/1.8.0_5
 
-DBSNP=~/uoo00053/reference_files/dbsnp_138.b37.vcf.gz
+DBSNP=~/uoo00053/reference_files/dbsnp_138.b37.vcf
 MILLS=~/uoo00053/reference_files/Mills_and_1000G_gold_standard.indels.b37.vcf
 INDELS=~/uoo00053/reference_files/1000G_phase1.indels.b37.vcf
 REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
