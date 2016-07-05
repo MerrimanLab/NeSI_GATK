@@ -19,8 +19,8 @@
 export OPENBLAS_MAIN_FREE=1
 
 #i=$SLURM_ARRAY_TASK_ID
-sample=FR07921700
-i=$2
+sample=$1
+i=$1
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
