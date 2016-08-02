@@ -17,18 +17,18 @@
 # University of Otago
 # Jun 2016
 
-#sample=$1
-sample=FR07921700
+sample=$1
 export OPENBLAS_MAIN_FREE=1
+source ~/NeSI_GATK/gatk_references.sh
+
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
-#DIR=$SLURM_SUBMIT_DIR
-DIR=~/uoo00053/working/
+DIR=$SLURM_SUBMIT_DIR
 module load picard/2.1.0
 
-if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=~/uoo00053/working/${sample}_aligned_reads.bam OUTPUT=~/uoo00053/working/${sample}_sorted_reads.bam SORT_ORDER=coordinate TMP_DIR=$DIR ; then
+if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=$DIR/${sample}_aligned_reads.bam OUTPUT=$DIR/${sample}_sorted_reads.bam SORT_ORDER=coordinate TMP_DIR=$DIR ; then
 	echo "sort sam failed"
 	exit 1
 fi

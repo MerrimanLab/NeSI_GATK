@@ -31,12 +31,11 @@ MILLS=~/uoo00053/reference_files/Mills_and_1000G_gold_standard.indels.b37.vcf
 INDELS=~/uoo00053/reference_files/1000G_phase1.indels.b37.vcf
 REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
 
-#DIR=$SLURM_SUBMIT_DIR
-DIR=~/uoo00053/working/
-GATK=~/uoo00053/GATK3.6/GenomeAnalysisTK.jar
-module load Java/1.8.0_5
+DIR=$SLURM_SUBMIT_DIR
+#DIR=~/uoo00053/working/
+module load GATK/3.6-Java-1.8.0_40
 
-if ! srun java -Xmx30g -jar $GATK \
+if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T PrintReads \
 	-R $REF \
 	-BQSR ~/uoo00053/working/${sample}_recal_data${i}.grp \

@@ -18,15 +18,16 @@
 
 export OPENBLAS_MAIN_FREE=1
 sample=$1
+source ~/NeSI_GATK/gatk_references.sh
+
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
-#DIR=$SLURM_SUBMIT_DIR
-DIR=~/uoo00053/working/
+DIR=$SLURM_SUBMIT_DIR
 module load picard/2.1.0
 
-if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=~/uoo00053/working/${sample}_dedup_reads.bam ; then
+if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=$DIR/${sample}_dedup_reads.bam ; then
 	echo "index failed"
 	exit 1
 fi
