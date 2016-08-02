@@ -19,14 +19,18 @@
 DIR=$1 #sample dir
 sample=$2
 file1=$3
+file1_pre=$(basename $(basename $file1 .gz) .fastq)
 file2=$4
+file2_pre=$(basename $(basename $file2 .gz) .fastq)
 RG=$5
 export OPENBLAS_MAIN_FREE=1
 
 
 # won't  work on NeSI with current installed split
-zcat $DIR/input/$file1 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $DIR/temp/$file1
-zcat $DIR/input/$file2 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $DIR/temp/$file2
+zcat $DIR/input/$file1 | ~/bin/parallel -J 1 --pipe -N10000000 'cat |gzip -c > \$\{file1_pre\}_{#}.fastq.gz'
+zcat $DIR/input/$file2 | ~/bin/parallel -J 1 --pipe -N10000000 'cat |gzip -c > \$\{file2_pre\}_{#}.fastq.gz'
+#zcat $DIR/input/$file1 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $DIR/temp/$file1
+#zcat $DIR/input/$file2 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $DIR/temp/$file2
 
 
 file1Num=$(ls $file1 | wc -l)
