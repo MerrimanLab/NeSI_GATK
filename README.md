@@ -7,8 +7,11 @@ Updating for GATK 3.6 in progress (AUG 2016)
 
 
 requires:
+
 passwordless ssh login setup for nesi
+
 passwordless ssh login for globus cli
+
 globus endpoint access for source data, nesi and, final storage 
 
 
