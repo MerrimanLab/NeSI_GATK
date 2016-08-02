@@ -38,5 +38,5 @@ if ! bwa mem -M -t 16 -R $RG $REF $DIR/temp/$file1_prefix $DIR/temp/$file2_prefi
         exit 1
 fi
 
-sbatch ~/NeSI_GATK/s2_sortSam.sl $sample
+sbatch ~/NeSI_GATK/s2_sortSam.sl $DIR $sample
 

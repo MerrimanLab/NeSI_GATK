@@ -17,7 +17,8 @@
 # University of Otago
 # Jun 2016
 
-sample=$1
+DIR=$1
+sample=$2
 export OPENBLAS_MAIN_FREE=1
 source ~/NeSI_GATK/gatk_references.sh
 
@@ -25,13 +26,12 @@ source ~/NeSI_GATK/gatk_references.sh
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
-DIR=$SLURM_SUBMIT_DIR
 module load picard/2.1.0
 
-if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=$DIR/${sample}_aligned_reads.bam OUTPUT=$DIR/${sample}_sorted_reads.bam SORT_ORDER=coordinate TMP_DIR=$DIR ; then
+if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=$DIR/temp/${sample}_aligned_reads.bam OUTPUT=$DIR/temp/${sample}_sorted_reads.bam SORT_ORDER=coordinate TMP_DIR=$DIR ; then
 	echo "sort sam failed"
 	exit 1
 fi
-sbatch ~/NeSI_GATK/s3_markdup.sl $sample
+sbatch ~/NeSI_GATK/s3_markdup.sl $DIR $sample
 #rm ${sample}_aligned_reads.bam   ###uncomment after a test run
 

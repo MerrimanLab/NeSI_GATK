@@ -17,16 +17,16 @@
 # University of Otago
 # Jun 2016
 
-sample=$1
+DIR=$1
+sample=$2
 export OPENBLAS_MAIN_FREE=1
 source ~/NeSI_GATK/gatk_references.sh
 
-DIR=$SLURM_SUBMIT_DIR
 module load picard/2.1.0
 
-if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=$DIR/${sample}_sorted_reads.bam OUTPUT=$DIR/${sample}_dedup_reads.bam METRICS_FILE=metrics.txt TMP_DIR=$DIR ; then
+if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=$DIR/temp/${sample}_sorted_reads.bam OUTPUT=$DIR/temp/${sample}_dedup_reads.bam METRICS_FILE=$DIR/logs/metrics.txt TMP_DIR=$DIR ; then
 	echo "markdup failed"
 	exit 1
 fi
-sbatch ~/NeSI_GATK/s4_index.sl $sample
+sbatch ~/NeSI_GATK/s4_index.sl $DIR $sample
 #rm ${sample}_sorted_reads.bam #### uncomment later

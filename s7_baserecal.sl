@@ -19,8 +19,9 @@
 export OPENBLAS_MAIN_FREE=1
 source ~/NeSI_GATK/gatk_references.sh
 
-sample=$1
-i=$2
+DIR=$1
+sample=$2
+i=$3
 
 DIR=$SLURM_SUBMIT_DIR
 module load GATK/3.6-Java-1.8.0_40
@@ -45,4 +46,4 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	echo "base recal on chr $i failed"
 	exit 1
 fi
-sbatch -J s8_applyrecal_chr${i} ~/NeSI_GATK/s8_applyrecal.sl $sample $i
+sbatch -J s8_applyrecal_chr${i} ~/NeSI_GATK/s8_applyrecal.sl $DIR $sample $i

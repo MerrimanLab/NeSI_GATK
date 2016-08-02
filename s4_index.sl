@@ -17,18 +17,23 @@
 # Jun 2016
 
 export OPENBLAS_MAIN_FREE=1
-sample=$1
+DIR=$1
+sample=$2
 source ~/NeSI_GATK/gatk_references.sh
 
-#echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
-DIR=$SLURM_SUBMIT_DIR
 module load picard/2.1.0
 
-if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=$DIR/${sample}_dedup_reads.bam ; then
+if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=$DIR/temp/${sample}_dedup_reads.bam ; then
 	echo "index failed"
 	exit 1
 fi
-sbatch ~/NeSI_GATK/s5_indelTarget.sl $sample
+#sbatch ~/NeSI_GATK/s5_indelTarget.sl $sample
+
+contigs=$(cat contigs_h37.txt)
+for chr in ${contigs[@]}; do
+        sbatch -J s7_baserecal_chr${chr} ~/NeSI_GATK/s7_baserecal.sl $DIR $sample $chr
+        echo "job for chr $chr submitted"
+        sleep 1 
+done
+
