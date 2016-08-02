@@ -17,17 +17,15 @@
 # University of Otago
 # Jun 2016
 
-sample=$1
-file1=$2
-file2=$3
-RG=$(head -1 $4)
+DIR=$1
+sample=$2
+file1_prefix=$(basename $(basename ${3} .gz) .fastq
+file2_prefix=$(basename $(basename ${4} .gz) .fastq
+RG=$(head -1 $5)
 export OPENBLAS_MAIN_FREE=1
 
-#echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
-
-DIR=$SLURM_SUBMIT_DIR
+#SLURM_ARRAY_TASK_ID
+fileNum=$(printf "%03d" $SLURM_ARRAY_TASK_ID)
 module load BWA/0.7.12-goolf-1.5.14
 module load SAMtools/1.2-goolf-1.5.14
 module load picard/2.1.0
@@ -35,7 +33,7 @@ module load picard/2.1.0
 source ~/NeSI_GATK/gatk_references.sh
 
 #RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
-if ! bwa mem -M -t 16 -R $RG $REF $file1 $file2 2> ~/uoo00053/working/${sample}_bwa.log | samtools view -bh - > ~/uoo00053/working/${sample}_aligned_reads.bam ; then
+if ! bwa mem -M -t 16 -R $RG $REF $DIR/temp/$file1_prefix $DIR/temp/$file2_prefix 2> $DIR/logs/${sample}_bwa.log | samtools view -bh - > $DIR/temp/${sample}_aligned_reads.bam ; then
         echo "BWA failed"
         exit 1
 fi

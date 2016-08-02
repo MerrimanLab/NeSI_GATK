@@ -16,19 +16,17 @@
 # Matt Bixley
 # University of Otago
 # Jun 2016
-
-sample=FR07921700
-file1=~/uoo00053/RawSeq/HHKLKCCXX_1_151126_FR07921700_Homo-sapiens__R_151102_MANPHI_FGS_M001_R1.fastq.gz
-file2=~/uoo00053/RawSeq/HHKLKCCXX_1_151126_FR07921700_Homo-sapiens__R_151102_MANPHI_FGS_M001_R2.fastq.gz
+DIR=$1 #sample dir
+sample=$2
+file1=$3
+file2=$4
+RG=$5
 export OPENBLAS_MAIN_FREE=1
 
-#echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
-DIR=$SLURM_SUBMIT_DIR
-zcat $file1 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $file1
-zcat $file2 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $file2
+# won't  work on NeSI with current installed split
+zcat $DIR/input/$file1 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $DIR/temp/$file1
+zcat $DIR/input/$file2 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $DIR/temp/$file2
 
 
 file1Num=$(ls $file1 | wc -l)
@@ -37,5 +35,5 @@ file2Num=$(ls $file2 | wc -l)
 #check same number of splits
 if [ $file1Num -eq $file2Num ]
 then
-    sbatch --array=1-$fileNum ~/NeSI_GATK/s1_align.sl $sample
+    sbatch --array=1-$fileNum ~/NeSI_GATK/s1_align.sl $DIR $sample $file1 $file2 $RG
 fi
