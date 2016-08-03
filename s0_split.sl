@@ -27,17 +27,19 @@ export OPENBLAS_MAIN_FREE=1
 
 
 # won't  work on NeSI with current installed split
-zcat $DIR/input/$file1 | ~/bin/parallel -J 1 --pipe -N10000000 'cat |gzip -c > \$\{file1_pre\}_{#}.fastq.gz'
-zcat $DIR/input/$file2 | ~/bin/parallel -J 1 --pipe -N10000000 'cat |gzip -c > \$\{file2_pre\}_{#}.fastq.gz'
+zcat $DIR/input/$file1 | ~/bin/parallel -k -J 1 --pipe -N10000000 cat \|gzip -c \> \'${file1_pre}\'_{#}.fastq.gz
+zcat $DIR/input/$file2 | ~/bin/parallel -k -J 1 --pipe -N10000000 cat \|gzip -c \> \'${file2_pre}\'_{#}.fastq.gz
 #zcat $DIR/input/$file1 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $DIR/temp/$file1
 #zcat $DIR/input/$file2 | split -l 10000000 --suffix-length=3 --numeric-suffixes=1 --filter='gzip > $FILE.gz' - $DIR/temp/$file2
 
 
-file1Num=$(ls $file1 | wc -l)
-file2Num=$(ls $file2 | wc -l)
+file1Num=$(ls $file1_pre*[0-9]*fastq.gz | wc -l)
+file2Num=$(ls $file2_pre*[0-9]*fastq.gz | wc -l)
 
 #check same number of splits
 if [ $file1Num -eq $file2Num ]
 then
-    sbatch --array=1-$fileNum ~/NeSI_GATK/s1_align.sl $DIR $sample $file1 $file2 $RG
+    JOBID=$(sbatch --array=1-$fileNum ~/NeSI_GATK/s1_align.sl $DIR $sample $file1 $file2 $RG)
+    sleep 2
+    sbatch -d $JOBID ~/NeSI_GATK/s1_gatherBam.sl $DIR $sample
 fi

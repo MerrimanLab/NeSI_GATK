@@ -33,10 +33,9 @@ module load picard/2.1.0
 source ~/NeSI_GATK/gatk_references.sh
 
 #RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
-if ! bwa mem -M -t 16 -R $RG $REF $DIR/temp/$file1_prefix $DIR/temp/$file2_prefix 2> $DIR/logs/${sample}_bwa.log | samtools view -bh - > $DIR/temp/${sample}_aligned_reads.bam ; then
+if ! bwa mem -M -t ${SLURM_JOB_CPUS_PER_NODE} -R $RG $REF $DIR/temp/$file1_prefix $DIR/temp/$file2_prefix 2> $DIR/logs/${sample}_${SLURM_ARRAY_TASK_ID}_bwa.log | samtools view -bh - > $DIR/temp/${sample}_aligned_reads_${SLURM_ARRAY_TASK_ID}.bam ; then
         echo "BWA failed"
         exit 1
 fi
 
-sbatch ~/NeSI_GATK/s2_sortSam.sl $DIR $sample
 

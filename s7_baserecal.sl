@@ -21,7 +21,7 @@ source ~/NeSI_GATK/gatk_references.sh
 
 DIR=$1
 sample=$2
-chr=$(cat ~/NeSI_GATK/contigs.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(NR == line){print}}')
+chr=$(cat ~/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(NR == line){print}}')
 
 module load GATK/3.6-Java-1.8.0_40
 
