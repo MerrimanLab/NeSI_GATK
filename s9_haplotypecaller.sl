@@ -20,7 +20,7 @@ export OPENBLAS_MAIN_FREE=1
 
 DIR=$1
 sample=$2
-i=$3
+chr=$3
 source ~/NeSI_GATK/gatk_references.sh
 
 DIR=$SLURM_SUBMIT_DIR
@@ -29,14 +29,14 @@ module load GATK/3.6-Java-1.8.0_40
 if ! srun java -jar -Xmx30g $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T HaplotypeCaller \
 	-R $REF \
-	-I $DIR/final/${sample}_baserecal_reads_${i}.bam \
-	-L ${i} \
+	-I $DIR/final/${sample}_baserecal_reads_${chr}.bam \
+	-L ${chr} \
 	--emitRefConfidence GVCF \
 	--variant_index_type LINEAR \
 	--variant_index_parameter 128000 \
 	--dbsnp $DBSNP \
-	-o $DIR/final/${sample}_${i}.raw.snps.indels.g.vcf \
-	-nct 16 ; then
+	-o $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf \
+	-nt ${SLURM_JOB_CPUS_PER_NODE} ; then
 
 	echo "haplotypecalled on chr $i failed"
 	exit 1

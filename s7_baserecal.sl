@@ -21,17 +21,16 @@ source ~/NeSI_GATK/gatk_references.sh
 
 DIR=$1
 sample=$2
-i=$3
+chr=$(cat ~/NeSI_GATK/contigs.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(NR == line){print}}')
 
-DIR=$SLURM_SUBMIT_DIR
 module load GATK/3.6-Java-1.8.0_40
 
 
 if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T BaseRecalibrator \
 	-R $REF \
-	-I $DIR/${sample}_realigned_reads_${i}.bam \
-	-o $DIR/${sample}_recal_data${i}.grp \
+	-I $DIR/${sample}_realigned_reads_${chr}.bam \
+	-o $DIR/${sample}_recal_data_${chr}.grp \
 	-knownSites $DBSNP \
 	-knownSites $MILLS \
 	-knownSites $INDELS \
@@ -40,10 +39,10 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-cov QualityScoreCovariate \
 	-cov CycleCovariate \
 	-cov ContextCovariate \
-	-log $DIR/${sample}_baserecal${i}.log \
-	-L ${i} ; then
+	-log $DIR/${sample}_baserecal_${chr}.log \
+	-L ${chr} ; then
 
 	echo "base recal on chr $i failed"
 	exit 1
 fi
-sbatch -J s8_applyrecal_chr${i} ~/NeSI_GATK/s8_applyrecal.sl $DIR $sample $i
+sbatch -J s8_applyrecal_chr${i} ~/NeSI_GATK/s8_applyrecal.sl ${DIR} ${sample} ${chr}

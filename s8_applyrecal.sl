@@ -21,7 +21,7 @@ export OPENBLAS_MAIN_FREE=1
 #i=$SLURM_ARRAY_TASK_ID
 DIR=$1
 sample=$2
-i=$3
+chr=$3
 
 source ~/NeSI_GATK/gatk_references.sh
 
@@ -30,16 +30,16 @@ module load GATK/3.6-Java-1.8.0_40
 if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T PrintReads \
 	-R $REF \
-	-BQSR $DIR/temp/${sample}_recal_data${i}.grp \
-	-I $DIR/temp/${sample}_realigned_reads_${i}.bam \
-	-o $DIR/final/${sample}_baserecal_reads_${i}.bam \
+	-BQSR $DIR/temp/${sample}_recal_data_${chr}.grp \
+	-I $DIR/temp/${sample}_realigned_reads_${chr}.bam \
+	-o $DIR/final/${sample}_baserecal_reads_${chr}.bam \
 	-l INFO \
-	-log $DIR/logs/printreads${i}.log \
-	-L ${i} ; then
+	-log $DIR/logs/printreads_${chr}.log \
+	-L ${chr} ; then
 
 	echo "print reads on chr $i failed"
 	exit 1
 fi
 
-JOB=$(sbatch -J s9_haplotypecaller_chr${i} ~/NeSI_GATK/s9_haplotypecaller.sl $DIR $sample $i)
+JOB=$(sbatch -J s9_haplotypecaller_chr${chr} ~/NeSI_GATK/s9_haplotypecaller.sl $DIR $sample $chr)
 echo "chr $i haplotypecaller job submitted $JOB"

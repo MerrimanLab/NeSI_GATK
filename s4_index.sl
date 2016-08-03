@@ -30,10 +30,6 @@ if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=$DIR/tem
 fi
 #sbatch ~/NeSI_GATK/s5_indelTarget.sl $sample
 
-contigs=$(cat contigs_h37.txt)
-for chr in ${contigs[@]}; do
-        sbatch -J s7_baserecal_chr${chr} ~/NeSI_GATK/s7_baserecal.sl $DIR $sample $chr
-        echo "job for chr $chr submitted"
-        sleep 1 
-done
+Ncontigs=$(cat ~/NeSI_GATK/contigs_h37.txt | wc -l)
+sbatch -J s7_baserecal --array=1-$Ncontigs ~/NeSI_GATK/s7_baserecal.sl $DIR $sample
 
