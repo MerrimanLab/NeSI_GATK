@@ -1,11 +1,9 @@
 #!/bin/bash
 #SBATCH -J s4_Index 
 #SBATCH -A uoo00053         # Project Account
-#SBATCH --time=15:00:00     # Walltime
+#SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=9048  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
-#SBATCH --mail-user=matt.bixley@otago.ac.nz
-#SBATCH --mail-type=ALL
 #SBATCH -C sb
 
 # Murray Cadzow
@@ -15,6 +13,7 @@
 # Matt Bixley
 # University of Otago
 # Jun 2016
+echo index start $(date "+%H:%M:%S %d-%m-%Y")
 
 export OPENBLAS_MAIN_FREE=1
 DIR=$1
@@ -31,5 +30,9 @@ fi
 #sbatch ~/NeSI_GATK/s5_indelTarget.sl $sample
 
 Ncontigs=$(cat ~/NeSI_GATK/contigs_h37.txt | wc -l)
-sbatch -J s7_baserecal --array=1-$Ncontigs ~/NeSI_GATK/s7_baserecal.sl $DIR $sample
+JOBID=$(sbatch -J s7_baserecal --array=1-$Ncontigs ~/NeSI_GATK/s7_baserecal.sl $DIR $sample)
+JOBID2=$(sbatch -d $(echo $JOBID | awk '{print $4}') -J s8_applyrecal --array=1-$Ncontigs ~/NeSI_GATK/s8_applyrecal.sl $DIR $sample)
+sbatch -d $(echo $JOBID | awk '{print $4}') -J s9_haplotypecaller --array=1-$Ncontigs ~/NeSI_GATK/s9_haplotypecaller.sl $DIR $sample)
+
+echo index finish $(date "+%H:%M:%S %d-%m-%Y")
 

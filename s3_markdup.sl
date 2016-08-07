@@ -1,12 +1,10 @@
 #!/bin/bash
 #SBATCH -J s3_MarkDup
 #SBATCH -A uoo00053         # Project Account
-#SBATCH --time=15:00:00     # Walltime
-#SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
-#SBATCH --cpus-per-task=16   # 12 OpenMP Threads
+#SBATCH --time=5:59:00     # Walltime
+#SBATCH --mem-per-cpu=24000  # memory/cpu (in MB)
+#SBATCH --cpus-per-task=1   # 12 OpenMP Threads
 #SBATCH --nodes=1
-#SBATCH --mail-user=matt.bixley@otago.ac.nz
-#SBATCH --mail-type=ALL
 #SBATCH -C sb
 
 # Murray Cadzow
@@ -16,6 +14,7 @@
 # Matt Bixley
 # University of Otago
 # Jun 2016
+echo markdup start $(date "+%H:%M:%S %d-%m-%Y")
 
 DIR=$1
 sample=$2
@@ -30,3 +29,5 @@ if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=$DIR/t
 fi
 sbatch ~/NeSI_GATK/s4_index.sl $DIR $sample
 #rm ${sample}_sorted_reads.bam #### uncomment later
+echo markdup finish $(date "+%H:%M:%S %d-%m-%Y")
+
