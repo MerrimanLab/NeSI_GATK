@@ -1,5 +1,8 @@
 # NeSI_GATK
 
+TESTING IN PROGRESS
+
+
 
 Designed on GATK best practices for GATK 3.4
 
