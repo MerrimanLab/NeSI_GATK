@@ -32,6 +32,6 @@ if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=$DIR/temp/${sa
 fi
 echo sort finish $(date "+%H:%M:%S %d-%m-%Y")
 
-#sbatch ~/NeSI_GATK/s3_markdup.sl $DIR $sample
+sbatch ~/NeSI_GATK/s3_markdup.sl $DIR $sample
 #rm ${sample}_aligned_reads.bam   ###uncomment after a test run
 
