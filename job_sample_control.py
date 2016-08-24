@@ -12,6 +12,7 @@
 import subprocess
 import time
 import os.path
+import logging
 from optparse import OptionParser
 from optparse import OptionGroup
 
@@ -43,6 +44,7 @@ def parse_arguments():
     parser.add_option_group(globus_options)
     parser.add_option_group(data_options)
     parser.add_option('--pause', dest = 'pause', help='Number of seconds to wait between checks. Default is 600 - i.e. 10 min')
+    parser.add_option('--log', dest = 'logfile', help="Name for log file")
     (options, args) = parser.parse_args()
 
     # assert all options are filled in
@@ -56,6 +58,11 @@ def parse_arguments():
     assert options.finished_file is not None,         "Need finished file"
     if options.pause is None:
         options.pause = 600
+    if options.logfile is None:
+
+        options.logfile = 'logfile_' +'_'.join([str(time.localtime().tm_year),
+                                           str(time.localtime().tm_mon),
+                                           str(time.localtime().tm_mday)]) +'.log'
     return(options)
 
 
@@ -87,7 +94,11 @@ def globus_send_dir(globus_id, from_ep, to_ep, sample):
 NESI METHODS
 """
 def make_nesi_dir_structure(options, samples):
-    path = '/gpfs1m/projects/' + options.project + "/" + 'working_dir/' +"{" + ",".join(samples) + "}/{input,temp,logs,final}"
+    if(len(samples) > 1):
+        names = ','.join(samples)
+    else:
+        names = str(samples)
+    path = '/gpfs1m/projects/' + options.project + "/" + 'working_dir/' +"{"+ names+ "}/{input,temp,logs,final}"
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['mkdir','-p',path,]
     subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
@@ -104,13 +115,13 @@ def check_nesi(options, path):
     #path = '/gpfs1m/projects/' + options.project + "/working_dir/" + sample
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['ls', path]
-    files = str(subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip(), 'utf-8').split("\n")
+    files = str(subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip(), 'utf-8').split()
     return(files)
 
 
 def nesi_sample_rmdir(options, sample):
-    sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz' , "'", "rm","-r","/gpfs1m/projects"+options.project+"/working_dir/"+sample,"'"]
-    subprocess.check_output(sshCommand +[file], stderr = subprocess.PIPE).strip()
+    sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz' , "rm","-r","/gpfs1m/projects/"+options.project+"/working_dir/"+sample]
+    subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip()
 
 
 def nesi_sample_rg(options, samples_dict, sample):
@@ -184,11 +195,14 @@ def get_samples(sample_dict):
 def poll_files(options, sample):
     path =  "/gpfs1m/projects/"+options.project+"/working_dir/"+sample+"/final/"
     # grab initial file sizes and modifications
-    initialCheck = check_nesi(options, path)
-    if 'finished.txt' in initialCheck:
-        return ("Finished")
-    elif 'failed.txt' in initialCheck:
+    check = check_nesi(options, path)
+    logging.info('pollfiles - initial_check: ' +' '.join(check))
+    print(check)
+    logging.info(str('finished.txt' in check))
+    if ('failed.txt' in check):
         return("Failed")
+    elif ('finished.txt' in check):
+        return ("Finished")
     else:
         return (False)
 
@@ -205,44 +219,53 @@ def process_samples(options, samples_dict):
         fq2 = samples_dict[sample][len(samples_dict[sample])-1]
         sample_fq = [globus_send_file(options.globus_id, options.globus_source_ep , options.globus_nesi_ep + path + 'input/', sample, fq1),
                  globus_send_file(options.globus_id, options.globus_source_ep , options.globus_nesi_ep +path+ 'input/', sample,  fq2)]
+        logging.info('sample: '+ sample+ " fastq started transfer up")
         # check transfer successful
         transfer = False
         while(transfer == False):
             transfer = check_send(options, sample_fq)
             if( transfer == False):
                 time.sleep(options.pause)
-
+        logging.info('sample: '+ sample + " fastq transfer finished")
         # start nesi job
         nesi_sample_rg(options, samples_dict, sample)
+        logging.info('sample: ' + sample + " read group made")
         nesi_start(options, sample, fq1, fq2)
-
+        logging.info('sample: '+sample+ ' GATK pipeline started' )
         # check finished
         finished = False
         while(finished == False):
+
             finished = poll_files(options, sample)
+            logging.info('checking for finished pollfiles: ' + str(finished))
             if( finished == False):
                 time.sleep(options.pause)
-
+        logging.info('sample: '+sample+ 'GATK pipeline finished')
         if(finished != 'Failed'):
             # transfer back
-            results = globus_send_dir(options.globus_id, options.globus_nesi_ep + path + 'final/', options.globus_results_ep + '/' + sample + '/', sample)
+            results = [globus_send_dir(options.globus_id, options.globus_nesi_ep + path + 'final/', options.globus_results_ep + '/' + sample + '/', sample)]
             transfer = False
             while(transfer == False):
-                transfer = check_send(results)
+                transfer = check_send(options, results)
                 if( transfer == False):
                     time.sleep(options.pause)
             # write out finished sample id
             write_finished_sample(options, sample)
+            logging.info('sample: ' + sample + ' results transferred back')
         else:
             write_failed_sample(options, sample)
-
+            logging.info('FAILED sample: '+ sample)
         # remove sample directory on nesi
         nesi_sample_rmdir(options, sample)
+        logging.info('sample: ' + sample + ' nesi directory removed')
+        logging.info('sample: '+ sample + ' SUCCEEDED')
 
 
 def main():
     options = parse_arguments()
     options.pause = int(options.pause)
+
+    logging.basicConfig(filename=options.logfile, level=logging.INFO)
     (samples_dict,sample_header) = load_sample_info(options.sample_file)
 
     finished_samples = load_finished_samples(options.finished_file)
@@ -252,7 +275,7 @@ def main():
     samples = get_samples(samples_dict)
 
     make_nesi_dir_structure(options, samples)
-
+    logging.info('nesi file structure made')
     process_samples(options, samples_dict)
 
 if __name__ == "__main__":
