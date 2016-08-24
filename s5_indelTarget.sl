@@ -17,29 +17,24 @@
 # University of Otago
 # Jun 2016
 
-sample=$1
+DIR=$1
+sample=$2
 export OPENBLAS_MAIN_FREE=1
 source ~/NeSI_GATK/gatk_references.sh
 
-#echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
-
-
-DIR=$SLURM_SUBMIT_DIR
 
 module load GATK/3.6-Java-1.8.0_40
 
 if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T RealignerTargetCreator \
 	-R $REF \
-	-I $DIR/${sample}_dedup_reads.bam \
-	-o $DIR/${sample}_output.intervals \
+	-I $DIR/temp/${sample}_dedup_reads.bam \
+	-o $DIR/temp/${sample}_output.intervals \
 	-known ${MILLS} \
 	-known ${INDELS} \
 	-l INFO \
 	-nt 16 \
-	-log ${sample}_target.log ; then
+	-log $DIR/logs/${sample}_target.log ; then
 
 	echo "indel target creator failed"
 	exit 1

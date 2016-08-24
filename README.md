@@ -1,5 +1,9 @@
 # NeSI_GATK
 
+TESTING IN PROGRESS
+
+need to have pigz installed (path is currently hard coded in s0_split.sl)
+
 
 Designed on GATK best practices for GATK 3.4
 

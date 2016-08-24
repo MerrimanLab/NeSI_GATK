@@ -20,24 +20,24 @@ export OPENBLAS_MAIN_FREE=1
 source ~/NeSI_GATK/gatk_references.sh
 
 #i=$SLURM_ARRAY_TASK_ID
-sample=$1
-i=$2
+DIR=$1
+sample=$2
+i=$3
 
 
-DIR=$SLURM_SUBMIT_DIR
 module load GATK/3.6-Java-1.8.0_40
 
 if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T IndelRealigner \
 	-R $REF \
-	-I $DIR/${sample}_dedup_reads.bam \
-	-o $DIR/${sample}_realigned_reads_${i}.bam \
+	-I $DIR/temp/${sample}_dedup_reads.bam \
+	-o $DIR/temp/${sample}_realigned_reads_${i}.bam \
 	-targetIntervals ~/uoo00053/working/${sample}_output.intervals \
 	-known ${MILLS} \
 	-known ${INDELS} \
 	-LOD 5.0 \
 	-model USE_READS \
-	-log ~/uoo00053/working/${sample}_realign_${i}.log \
+	-log $DIR/logs/${sample}_realign_${i}.log \
 	-l INFO \
 	-L ${i} ; then
 

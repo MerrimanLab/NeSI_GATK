@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J s3_MarkDup
+#SBATCH -J s1_gatherBam
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=24000  # memory/cpu (in MB)
@@ -14,7 +14,7 @@
 # Matt Bixley
 # University of Otago
 # Jun 2016
-echo markdup start $(date "+%H:%M:%S %d-%m-%Y")
+echo gather start $(date "+%H:%M:%S %d-%m-%Y")
 
 DIR=$1
 sample=$2
@@ -23,11 +23,13 @@ source ~/NeSI_GATK/gatk_references.sh
 
 module load picard/2.1.0
 
-if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=$DIR/temp/${sample}_sorted_reads.bam OUTPUT=$DIR/temp/${sample}_dedup_reads.bam METRICS_FILE=$DIR/logs/metrics.txt TMP_DIR=$DIR ; then
-	echo "markdup failed"
+ls $DIR/temp/${sample}_aligned_reads_*.bam > temp/gather_bams.txt
+
+if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar GatherBamFiles I=$DIR/temp/gather_bams.txt OUTPUT=$DIR/temp/${sample}_gathered.bam ; then
+	echo "gather failed"
 	exit 1
 fi
-sbatch ~/NeSI_GATK/s4_index.sl $DIR $sample
+sbatch ~/NeSI_GATK/s2_sortSam.sl $DIR $sample
 #rm ${sample}_sorted_reads.bam #### uncomment later
-echo markdup finish $(date "+%H:%M:%S %d-%m-%Y")
+echo gather finish $(date "+%H:%M:%S %d-%m-%Y")
 

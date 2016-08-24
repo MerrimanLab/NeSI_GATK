@@ -1,11 +1,9 @@
 #!/bin/bash
 #SBATCH -J s8_printReads
 #SBATCH -A uoo00053         # Project Account
-#SBATCH --time=15:00:00     # Walltime
+#SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=31024  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
-#SBATCH --mail-user=matt.bixley@otago.ac.nz
-#SBATCH --mail-type=ALL
 #SBATCH -C sb
 
 # Murray Cadzow
@@ -15,39 +13,35 @@
 # Matt Bixley
 # University of Otago
 # Jun 2016
+echo applyrecal start $(date "+%H:%M:%S %d-%m-%Y")
 
 export OPENBLAS_MAIN_FREE=1
 
 #i=$SLURM_ARRAY_TASK_ID
-sample=$1
-i=$2
+DIR=$1
+sample=$2
+#chr=$3
+chr=$(cat ~/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(NR == line){print}}')
 
-#echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
-#echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
+source ~/NeSI_GATK/gatk_references.sh
 
-DBSNP=~/uoo00053/reference_files/dbsnp_138.b37.vcf
-MILLS=~/uoo00053/reference_files/Mills_and_1000G_gold_standard.indels.b37.vcf
-INDELS=~/uoo00053/reference_files/1000G_phase1.indels.b37.vcf
-REF=~/uoo00053/reference_files/hs37d5/hs37d5.fa
-
-DIR=$SLURM_SUBMIT_DIR
-#DIR=~/uoo00053/working/
 module load GATK/3.6-Java-1.8.0_40
 
 if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T PrintReads \
 	-R $REF \
-	-BQSR ~/uoo00053/working/${sample}_recal_data${i}.grp \
-	-I ~/uoo00053/working/${sample}_realigned_reads_${i}.bam \
-	-o ~/uoo00053/working/${sample}_baserecal_reads_${i}.bam \
+	-BQSR $DIR/temp/${sample}_recal_data_${chr}.grp \
+	-I $DIR/temp/${sample}_dedup_reads.bam \
+	-o $DIR/final/${sample}_baserecal_reads_${chr}.bam \
 	-l INFO \
-	-log ~/uoo00053/working/printreads${i}.log \
-	-L ${i} ; then
+	-log $DIR/logs/printreads_${chr}.log \
+	-L ${chr} ; then
 
 	echo "print reads on chr $i failed"
 	exit 1
 fi
 
-JOB=$(sbatch -J s9_haplotypecaller_chr${i} ~/NeSI_GATK/s9_haplotypecaller.sl $sample $i)
+#JOB=$(sbatch -J s9_haplotypecaller_chr${chr} ~/NeSI_GATK/s9_haplotypecaller.sl $DIR $sample $chr)
 echo "chr $i haplotypecaller job submitted $JOB"
+echo applyrecal finish $(date "+%H:%M:%S %d-%m-%Y")
+

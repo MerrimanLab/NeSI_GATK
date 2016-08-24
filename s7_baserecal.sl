@@ -1,11 +1,9 @@
 #!/bin/bash
 #SBATCH -J s7_baseRecal
 #SBATCH -A uoo00053         # Project Account
-#SBATCH --time=15:00:00     # Walltime
+#SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=31024  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
-#SBATCH --mail-user=matt.bixley@otago.ac.nz
-#SBATCH --mail-type=ALL
 #SBATCH -C sb
 
 # Murray Cadzow
@@ -15,22 +13,23 @@
 # Matt Bixley
 # University of Otago
 # Jun 2016
+echo baserecal start $(date "+%H:%M:%S %d-%m-%Y")
 
 export OPENBLAS_MAIN_FREE=1
 source ~/NeSI_GATK/gatk_references.sh
 
-sample=$1
-i=$2
+DIR=$1
+sample=$2
+chr=$(cat ~/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(NR == line){print}}')
 
-DIR=$SLURM_SUBMIT_DIR
 module load GATK/3.6-Java-1.8.0_40
 
 
 if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T BaseRecalibrator \
 	-R $REF \
-	-I $DIR/${sample}_realigned_reads_${i}.bam \
-	-o $DIR/${sample}_recal_data${i}.grp \
+	-I $DIR/temp/${sample}_dedup_reads.bam \
+	-o $DIR/temp/${sample}_recal_data_${chr}.grp \
 	-knownSites $DBSNP \
 	-knownSites $MILLS \
 	-knownSites $INDELS \
@@ -39,10 +38,12 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-cov QualityScoreCovariate \
 	-cov CycleCovariate \
 	-cov ContextCovariate \
-	-log $DIR/${sample}_baserecal${i}.log \
-	-L ${i} ; then
+	-log $DIR/logs/${sample}_baserecal_${chr}.log \
+	-L ${chr} ; then
 
 	echo "base recal on chr $i failed"
 	exit 1
 fi
-sbatch -J s8_applyrecal_chr${i} ~/NeSI_GATK/s8_applyrecal.sl $sample $i
+#sbatch -J s8_applyrecal_chr${i} ~/NeSI_GATK/s8_applyrecal.sl ${DIR} ${sample} ${chr}
+echo baserecal finish $(date "+%H:%M:%S %d-%m-%Y")
+
