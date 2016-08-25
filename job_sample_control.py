@@ -13,6 +13,7 @@ import subprocess
 import time
 import os.path
 import logging
+import sys
 from optparse import OptionParser
 from optparse import OptionGroup
 
@@ -95,10 +96,10 @@ NESI METHODS
 """
 def make_nesi_dir_structure(options, samples):
     if(len(samples) > 1):
-        names = ','.join(samples)
+        names = "{" + ','.join(samples)+ "}"
     else:
-        names = str(samples)
-    path = '/gpfs1m/projects/' + options.project + "/" + 'working_dir/' +"{"+ names+ "}/{input,temp,logs,final}"
+        names = "".join(samples)
+    path = '/gpfs1m/projects/' + options.project + "/" + 'working_dir/' + names+ "/{input,temp,logs,final}"
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['mkdir','-p',path,]
     subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
@@ -196,9 +197,7 @@ def poll_files(options, sample):
     path =  "/gpfs1m/projects/"+options.project+"/working_dir/"+sample+"/final/"
     # grab initial file sizes and modifications
     check = check_nesi(options, path)
-    logging.info('pollfiles - initial_check: ' +' '.join(check))
-    print(check)
-    logging.info(str('finished.txt' in check))
+    #logging.info('pollfiles - initial_check: ' +' '.join(check))
     if ('failed.txt' in check):
         return("Failed")
     elif ('finished.txt' in check):
@@ -237,10 +236,10 @@ def process_samples(options, samples_dict):
         while(finished == False):
 
             finished = poll_files(options, sample)
-            logging.info('checking for finished pollfiles: ' + str(finished))
+            #logging.info('checking for finished pollfiles: ' + str(finished))
             if( finished == False):
                 time.sleep(options.pause)
-        logging.info('sample: '+sample+ 'GATK pipeline finished')
+        logging.info('sample: '+sample+ ' GATK pipeline finished')
         if(finished != 'Failed'):
             # transfer back
             results = [globus_send_dir(options.globus_id, options.globus_nesi_ep + path + 'final/', options.globus_results_ep + '/' + sample + '/', sample)]
@@ -252,13 +251,13 @@ def process_samples(options, samples_dict):
             # write out finished sample id
             write_finished_sample(options, sample)
             logging.info('sample: ' + sample + ' results transferred back')
+            logging.info('sample: '+ sample + ' SUCCEEDED')
         else:
             write_failed_sample(options, sample)
             logging.info('FAILED sample: '+ sample)
         # remove sample directory on nesi
         nesi_sample_rmdir(options, sample)
         logging.info('sample: ' + sample + ' nesi directory removed')
-        logging.info('sample: '+ sample + ' SUCCEEDED')
 
 
 def main():
@@ -273,7 +272,9 @@ def main():
     samples_dict = exclude_samples(samples_dict, finished_samples)
 
     samples = get_samples(samples_dict)
-
+    if(len(samples) == 0):
+        logging.info('No samples to process')
+        sys.exit()
     make_nesi_dir_structure(options, samples)
     logging.info('nesi file structure made')
     process_samples(options, samples_dict)
