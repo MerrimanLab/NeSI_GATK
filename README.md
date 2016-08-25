@@ -29,3 +29,20 @@ all 'middle files' are stored in temp/
 all logs are stored in logs/
 
 final bams and g.vcf files are stored in final/
+
+
+How to run job_sample_control.py:
+
+```
+python NeSI_GATK/job_sample_control.py \
+    --nesi-username=user.name \
+    --nesi-project=project_code \
+    --globus-id=globusid \
+    --globus-source-endpoint=username\#endpointname/path/to/fastqs/ \
+    --globus-nesi-endpoint=nz\#uoa \
+    --globus-results-endpoint=username\#endpointname/path/to/download/results/to/ \
+    --sample-file=sample_file.txt \
+    --finished-file=finished_samples.txt \
+    --pause=600 \
+    --log=logfile.log
+```
