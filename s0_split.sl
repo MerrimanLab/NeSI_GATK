@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH -J s0_split.sl
 #SBATCH -A uoo00053         # Project Account
-#SBATCH --time=5:59:00     # Walltime
+#SBATCH --time=0:09:00     # Walltime
 #SBATCH --mem-per-cpu=1000  # memory/cpu (in MB)
-#SBATCH --cpus-per-task=8   # 12 OpenMP Threads
+#SBATCH --cpus-per-task=1   # 12 OpenMP Threads
 #SBATCH --nodes=1
 #SBATCH -C sb
 
@@ -23,8 +23,6 @@ sample=$4
 echo split start $(date "+%H:%M:%S %d-%m-%Y")
 
 
-# won't  work on NeSI with current installed split
-#srun ~/ngsutils/bin/fastqutils split -gz $DIR/input/$file $DIR/temp/$fileBase $nFiles
 
 
 srun zcat $DIR/input/$file1 | awk 'BEGIN{i=1} NR%100000000==1{if(i>1){close(x)} x="~/pigz-2.3.3/pigz -p 8 -c > temp/R1_"i++".fastq.gz"}{print | x}'
@@ -38,9 +36,12 @@ if [[ $file1Num -eq $file2Num && $file1Num > 0 && $file2Num > 0 ]]
 then
     JOBID=$(sbatch --array=1-$file1Num ~/NeSI_GATK/s1_align.sl $DIR $sample)
     JOBID=$(echo $JOBID | awk '{print $4}')
-    sleep 2
-    sbatch -d $JOBID ~/NeSI_GATK/s1_gatherBam.sl $DIR $sample
+    sleep 20
+    JOBID2=$(sbatch -d $JOBID ~/NeSI_GATK/s1_gatherBam.sl $DIR $sample)
+    JOBID2=$(echo $JOBID2 | awk '{print $4}')
+    echo s1_align $JOBID >> $DIR/jobs.txt
+    echo s1_gather $JOBID2 >> $DIR/jobs.txt
 fi
-
+echo $DIR $file1 $file2 $sample > $DIR/final/s0_args.txt
 echo split finish $(date "+%H:%M:%S %d-%m-%Y")
 
