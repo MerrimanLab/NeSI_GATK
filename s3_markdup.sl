@@ -25,9 +25,11 @@ module load picard/2.1.0
 
 if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates INPUT=$DIR/temp/${sample}_sorted_reads.bam OUTPUT=$DIR/temp/${sample}_dedup_reads.bam METRICS_FILE=$DIR/logs/metrics.txt TMP_DIR=$DIR ; then
 	echo "markdup failed"
+	touch $DIR/final/failed.txt
 	exit 1
 fi
-sbatch ~/NeSI_GATK/s4_index.sl $DIR $sample
-#rm ${sample}_sorted_reads.bam #### uncomment later
+JOBID=$(sbatch ~/NeSI_GATK/s4_index.sl $DIR $sample)
+echo index $(echo $JOBID | awk '{print $4'}) >> $DIR/jobs.txt
+rm $DIR/temp/${sample}_sorted_reads.bam 
 echo markdup finish $(date "+%H:%M:%S %d-%m-%Y")
 

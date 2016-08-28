@@ -42,6 +42,7 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-L ${chr} ; then
 
 	echo "base recal on chr $i failed"
+	touch $DIR/final/failed.txt
 	exit 1
 fi
 #sbatch -J s8_applyrecal_chr${i} ~/NeSI_GATK/s8_applyrecal.sl ${DIR} ${sample} ${chr}

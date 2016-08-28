@@ -22,14 +22,17 @@ export OPENBLAS_MAIN_FREE=1
 source ~/NeSI_GATK/gatk_references.sh
 
 module load picard/2.1.0
-
+rm $DIR/input/*fastq.gz
+rm $DIR/temp/*.fastq.gz
 ls $DIR/temp/${sample}_aligned_reads_*.bam > temp/gather_bams.txt
 
 if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar GatherBamFiles I=$DIR/temp/gather_bams.txt OUTPUT=$DIR/temp/${sample}_gathered.bam ; then
 	echo "gather failed"
+	touch $DIR/final/failed.txt
 	exit 1
 fi
-sbatch ~/NeSI_GATK/s2_sortSam.sl $DIR $sample
-#rm ${sample}_sorted_reads.bam #### uncomment later
+JOBID=$(sbatch ~/NeSI_GATK/s2_sortSam.sl $DIR $sample)
+echo s2_sort $(echo $JOBID | awk '{print $4}' >> $DIR/jobs.txt
+rm $DIR/temp/${sample}_aligned_reads_*.bam 
 echo gather finish $(date "+%H:%M:%S %d-%m-%Y")
 

@@ -38,10 +38,11 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-L ${chr} ; then
 
 	echo "print reads on chr $i failed"
+	touch $DIR/final/failed.txt
 	exit 1
 fi
 
 #JOB=$(sbatch -J s9_haplotypecaller_chr${chr} ~/NeSI_GATK/s9_haplotypecaller.sl $DIR $sample $chr)
-echo "chr $i haplotypecaller job submitted $JOB"
+#echo "chr $i haplotypecaller job submitted $JOB"
 echo applyrecal finish $(date "+%H:%M:%S %d-%m-%Y")
 
