@@ -3,7 +3,7 @@
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=0:09:00     # Walltime
 #SBATCH --mem-per-cpu=1000  # memory/cpu (in MB)
-#SBATCH --cpus-per-task=1   # 12 OpenMP Threads
+#SBATCH --cpus-per-task=8   # 12 OpenMP Threads
 #SBATCH --nodes=1
 #SBATCH -C sb
 
