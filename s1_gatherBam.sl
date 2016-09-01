@@ -32,7 +32,7 @@ if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar GatherBamFiles I=$DIR/temp/
 	exit 1
 fi
 JOBID=$(sbatch ~/NeSI_GATK/s2_sortSam.sl $DIR $sample)
-echo s2_sort $(echo $JOBID | awk '{print $4}' >> $DIR/jobs.txt
+echo s2_sort $(echo $JOBID | awk '{print $4}') >> $DIR/jobs.txt
 rm $DIR/temp/${sample}_aligned_reads_*.bam 
 echo gather finish $(date "+%H:%M:%S %d-%m-%Y")
 
