@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J s3_MarkDup
 #SBATCH -A uoo00053         # Project Account
-#SBATCH --time=5:59:00     # Walltime
+#SBATCH --time=11:59:00     # Walltime
 #SBATCH --mem-per-cpu=24000  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
 #SBATCH --nodes=1
