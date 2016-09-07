@@ -42,6 +42,9 @@ then
     echo s1_align $JOBID >> $DIR/jobs.txt
     echo s1_gather $JOBID2 >> $DIR/jobs.txt
 fi
+
+rm $DIR/input/$file2 $DIR/input/$file1
+
 echo $DIR $file1 $file2 $sample > $DIR/final/s0_args.txt
 echo split finish $(date "+%H:%M:%S %d-%m-%Y")
 
