@@ -214,6 +214,7 @@ def process_samples(options, samples_dict):
     for sample in samples_dict:
         # send fastqs
         path = '/gpfs1m/projects/' + options.project + "/working_dir/" + sample +'/'
+        print(sample)
         fq1 = samples_dict[sample][len(samples_dict[sample])-2]
         fq2 = samples_dict[sample][len(samples_dict[sample])-1]
         sample_fq = [globus_send_file(options.globus_id, options.globus_source_ep , options.globus_nesi_ep + path + 'input/', sample, fq1),
