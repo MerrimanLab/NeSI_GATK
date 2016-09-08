@@ -181,7 +181,8 @@ def load_sample_info(sampleFile):
         header = next(f)
         for line in f:
             line = line.strip('\n').split(' ')
-            samples_dict[line[0]] = line[1:]
+            if(line[0] != ''):
+                samples_dict[line[0]] = line[1:]
     f.close()
     return(samples_dict, header[1:])
 
