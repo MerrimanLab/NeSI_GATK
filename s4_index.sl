@@ -20,8 +20,8 @@ DIR=$1
 sample=$2
 source ~/NeSI_GATK/gatk_references.sh
 
-
 module load picard/2.1.0
+module load SAMtools/1.2-goolf-1.5.14
 
 if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=$DIR/temp/${sample}_dedup_reads.bam ; then
 	echo "index failed"
