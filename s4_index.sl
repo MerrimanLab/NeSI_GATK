@@ -28,6 +28,13 @@ if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=$DIR/tem
 	touch $DIR/final/failed.txt
 	exit 1
 fi
+
+if ! sortsam view -f 4 $DIR/temp/${sample}_dedup_reads.bam > $DIR/final/${sample}_unmapped_reads.bam ; then
+	echo "unmapped read failed"
+	touch $DIR/final/failed.txt
+	exit 1
+fi
+
 #sbatch ~/NeSI_GATK/s5_indelTarget.sl $sample
 
 Ncontigs=$(cat ~/NeSI_GATK/contigs_h37.txt | wc -l)
