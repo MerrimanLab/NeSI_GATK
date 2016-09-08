@@ -25,8 +25,8 @@ echo split start $(date "+%H:%M:%S %d-%m-%Y")
 
 
 
-srun zcat $DIR/input/$file1 | awk 'BEGIN{i=1} NR%100000000==1{if(i>1){close(x)} x="~/pigz-2.3.3/pigz -p 8 -c > temp/R1_"i++".fastq.gz"}{print | x}'
-srun zcat $DIR/input/$file2 | awk 'BEGIN{i=1} NR%100000000==1{if(i>1){close(x)} x="~/pigz-2.3.3/pigz -p 8 -c > temp/R2_"i++".fastq.gz"}{print | x}'
+srun zcat $DIR/input/$file1 | awk 'BEGIN{i=1} NR%50000000==1{if(i>1){close(x)} x="~/pigz-2.3.3/pigz -p 8 -c > temp/R1_"i++".fastq.gz"}{print | x}'
+srun zcat $DIR/input/$file2 | awk 'BEGIN{i=1} NR%50000000==1{if(i>1){close(x)} x="~/pigz-2.3.3/pigz -p 8 -c > temp/R2_"i++".fastq.gz"}{print | x}'
 
 file1Num=$(ls $DIR/temp/R1*fastq.gz | wc -l)
 file2Num=$(ls $DIR/temp/R2*fastq.gz | wc -l)
@@ -42,6 +42,9 @@ then
     echo s1_align $JOBID >> $DIR/jobs.txt
     echo s1_gather $JOBID2 >> $DIR/jobs.txt
 fi
+
+rm $DIR/input/$file2 $DIR/input/$file1
+
 echo $DIR $file1 $file2 $sample > $DIR/final/s0_args.txt
 echo split finish $(date "+%H:%M:%S %d-%m-%Y")
 
