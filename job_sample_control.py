@@ -266,7 +266,7 @@ def main():
     options = parse_arguments()
     options.pause = int(options.pause)
 
-    logging.basicConfig(filename=options.logfile, level=logging.INFO)
+    logging.basicConfig(filename=options.logfile, level=logging.INFO, format= '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     (samples_dict,sample_header) = load_sample_info(options.sample_file)
 
     finished_samples = load_finished_samples(options.finished_file)
