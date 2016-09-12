@@ -73,7 +73,7 @@ GLOBUS METHODS
 #returns string for transfer_id
 def globus_send_file(globus_id, from_ep, to_ep, sample, file):
     sshCommand = ["ssh",'-t', globus_id + "@cli.globusonline.org",
-                   "transfer", "--label","'" + sample +"_up" + "'", "--", from_ep + file, to_ep + file]
+                   "transfer","--encrypt", "--label","'" + sample +"_up" + "'", "--", from_ep + file, to_ep + file]
     return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(), 'utf-8').split()[2])
 
 
@@ -86,7 +86,7 @@ def check_globus_transfer(globus_id, transfer_id):
 # returns string for transfer_id
 def globus_send_dir(globus_id, from_ep, to_ep, sample):
     sshCommand = ["ssh",'-t', globus_id + "@cli.globusonline.org",
-                   "transfer", "--label", "'" + sample + "_dir_down" + "'", "--", from_ep, to_ep, "-r"]
+                   "transfer", "--encrypt","--label", "'" + sample + "_dir_down" + "'", "--", from_ep, to_ep, "-r"]
     return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(), 'utf-8').split()[2])
 
 
