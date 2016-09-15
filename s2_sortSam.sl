@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J s2_sortSam.sl
 #SBATCH -A uoo00053         # Project Account
-#SBATCH --time=5:59:00     # Walltime
+#SBATCH --time=11:59:00     # Walltime
 #SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=16   # 12 OpenMP Threads
 #SBATCH --nodes=1
