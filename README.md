@@ -31,7 +31,7 @@ all logs are stored in logs/
 final bams and g.vcf files are stored in final/
 
 
-How to run job_sample_control.py:
+How to run job_sample_control.py (tested on python v3.5):
 
 ```
 python NeSI_GATK/job_sample_control.py \
