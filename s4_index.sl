@@ -43,9 +43,9 @@ JOBID2=$(sbatch -d $(echo $JOBID | awk '{print $4}') -J s8_applyrecal --array=1-
 JOBID3=$(sbatch -d $(echo $JOBID2 | awk '{print $4}') -J s9_haplotypecaller --array=1-$Ncontigs ~/NeSI_GATK/s9_haplotypecaller.sl $DIR $sample)
 JOBIB4=$(sbatch -d $(echo JOBID3 | awk '{print $4}') ~/NeSI_GATK/s10_finish.sl $DIR)
 
-echo baserecal $(echo $JOBID | awk '{print $4'}) >> $DIR/jobs.txt
-echo applyrecal $(echo $JOBID2 | awk '{print $4'}) >> $DIR/jobs.txt
-echo haplotypecaller $(echo $JOBID3 | awk '{print $4'}) >> $DIR/jobs.txt
-echo finish $(echo $JOBID4 | awk '{print $4'}) >> $DIR/jobs.txt
+echo baserecal $(echo $JOBID | awk '{print $4}') >> $DIR/jobs.txt
+echo applyrecal $(echo $JOBID2 | awk '{print $4}') >> $DIR/jobs.txt
+echo haplotypecaller $(echo $JOBID3 | awk '{print $4}') >> $DIR/jobs.txt
+echo finish $(echo $JOBID4 | awk '{print $4}') >> $DIR/jobs.txt
 echo index finish $(date "+%H:%M:%S %d-%m-%Y")
 
