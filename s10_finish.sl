@@ -7,7 +7,7 @@
 #SBATCH --nodes=1
 #SBATCH -C sb
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
-#SBATCH --mail-type=ALL
+#SBATCH --mail-type=FAIL,TIME_LIMIT_90
 
 # Murray Cadzow
 # University of Otago
@@ -18,7 +18,7 @@
 # Jun 2016
 DIR=$1
 srun cp -r $DIR/logs $DIR/*.out $DIR/jobs.txt $DIR/final/
-srun tar -czf $DIR/final/logs.tar.gz $DIR/final/*.out $DIR/final/logs/
+
 
 touch $DIR/final/finished.txt 
 

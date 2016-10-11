@@ -6,6 +6,8 @@
 #SBATCH --cpus-per-task=8   # 12 OpenMP Threads
 #SBATCH --nodes=1
 #SBATCH -C sb
+#SBATCH --mail-user=murray.cadzow@otago.ac.nz
+#SBATCH --mail-type=FAIL,TIME_LIMIT_90
 
 # Murray Cadzow
 # University of Otago
