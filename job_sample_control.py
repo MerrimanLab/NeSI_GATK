@@ -254,12 +254,13 @@ def process_samples(options, samples_dict):
             write_finished_sample(options, sample)
             logging.info('sample: ' + sample + ' results transferred back')
             logging.info('sample: '+ sample + ' SUCCEEDED')
+            # remove sample directory on nesi
+            nesi_sample_rmdir(options, sample)
+            logging.info('sample: ' + sample + ' nesi directory removed')
         else:
             write_failed_sample(options, sample)
             logging.info('FAILED sample: '+ sample)
-        # remove sample directory on nesi
-        #nesi_sample_rmdir(options, sample)
-        #logging.info('sample: ' + sample + ' nesi directory removed')
+            print(sample + " FAILED - go and investigate")
 
 
 def main():
