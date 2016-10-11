@@ -41,7 +41,7 @@ Ncontigs=$(cat ~/NeSI_GATK/contigs_h37.txt | wc -l)
 JOBID=$(sbatch -J s7_baserecal --array=1-$Ncontigs ~/NeSI_GATK/s7_baserecal.sl $DIR $sample)
 JOBID2=$(sbatch -d $(echo $JOBID | awk '{print $4}') -J s8_applyrecal --array=1-$Ncontigs ~/NeSI_GATK/s8_applyrecal.sl $DIR $sample)
 JOBID3=$(sbatch -d $(echo $JOBID2 | awk '{print $4}') -J s9_haplotypecaller --array=1-$Ncontigs ~/NeSI_GATK/s9_haplotypecaller.sl $DIR $sample)
-JOBIB4=$(sbatch -d $(echo JOBID3 | awk '{print $4}') ~/NeSI_GATK/s10_finish.sl $DIR)
+JOBID4=$(sbatch -d $(echo $JOBID3 | awk '{print $4}') ~/NeSI_GATK/s10_finish.sl $DIR)
 
 echo baserecal $(echo $JOBID | awk '{print $4}') >> $DIR/jobs.txt
 echo applyrecal $(echo $JOBID2 | awk '{print $4}') >> $DIR/jobs.txt

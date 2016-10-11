@@ -18,6 +18,8 @@
 # Jun 2016
 DIR=$1
 srun cp -r $DIR/logs $DIR/*.out $DIR/jobs.txt $DIR/final/
+srun tar -czf $DIR/final/logs.tar.gz $DIR/final/*.out $DIR/final/logs/
+
 touch $DIR/final/finished.txt 
 
 
