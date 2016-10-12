@@ -40,7 +40,7 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-L ${chr} ; then
 
 	echo "print reads on chr $i failed"
-	touch $DIR/final/failed.txt
+	echo 'print reads failed' > $DIR/final/failed.txt
 	exit 1
 fi
 

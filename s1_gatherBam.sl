@@ -30,7 +30,7 @@ ls $DIR/temp/${sample}_aligned_reads_*.bam > temp/gather_bams.txt
 
 if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar GatherBamFiles I=$DIR/temp/gather_bams.txt OUTPUT=$DIR/temp/${sample}_gathered.bam ; then
 	echo "gather failed"
-	touch $DIR/final/failed.txt
+	echo 'gather failed' > $DIR/final/failed.txt
 	exit 1
 fi
 JOBID=$(sbatch ~/NeSI_GATK/s2_sortSam.sl $DIR $sample)

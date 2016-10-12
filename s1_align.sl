@@ -32,7 +32,7 @@ module load SAMtools/1.2-goolf-1.5.14
 #RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
 if ! srun bwa mem -M -t ${SLURM_JOB_CPUS_PER_NODE} -R ${RG} $REF $DIR/temp/R1_${i}.fastq.gz $DIR/temp/R2_${i}.fastq.gz 2> $DIR/logs/${sample}_${i}_bwa.log | samtools view -bh - > $DIR/temp/${sample}_aligned_reads_${i}.bam ; then
         echo "BWA failed"
-	touch $DIR/final/failed.txt
+	echo 'align failed' > $DIR/final/failed.txt
         exit 1
 fi
 

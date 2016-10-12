@@ -27,7 +27,7 @@ module load SAMtools/1.2-goolf-1.5.14
 
 if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar BuildBamIndex INPUT=$DIR/temp/${sample}_dedup_reads.bam ; then
 	echo "index failed"
-	touch $DIR/final/failed.txt
+	echo 'index failed' > $DIR/final/failed.txt
 	exit 1
 fi
 

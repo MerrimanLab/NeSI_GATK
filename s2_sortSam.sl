@@ -29,7 +29,7 @@ source ~/NeSI_GATK/gatk_references.sh
 module load picard/2.1.0
 if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=$DIR/temp/${sample}_gathered.bam OUTPUT=$DIR/temp/${sample}_sorted_reads.bam SORT_ORDER=coordinate TMP_DIR=$DIR ; then
 	echo "sort sam failed"
-	touch $DIR/final/failed.txt
+	echo 'sort failed' > $DIR/final/failed.txt
 	exit 1
 fi
 echo sort finish $(date "+%H:%M:%S %d-%m-%Y")

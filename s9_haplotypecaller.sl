@@ -39,8 +39,8 @@ if ! srun java -jar -Xmx30g $EBROOTGATK/GenomeAnalysisTK.jar \
 	-o $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf \
 	-nct ${SLURM_JOB_CPUS_PER_NODE} ; then
 
-	echo "haplotypecalled on chr $i failed"
-	touch $DIR/final/failed.txt
+	echo "haplotypecalled on chr $chr failed"
+	echo 'haplotypecaller failed' > $DIR/final/failed.txt
 	exit 1
 fi
 echo haplotypecaller finish $(date "+%H:%M:%S %d-%m-%Y")
