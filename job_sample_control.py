@@ -134,6 +134,21 @@ def nesi_sample_rg(options, samples_dict, sample):
 """
 LOCAL METHODS
 """
+
+def run_ssh(options,command):
+    for attempt in range(100):
+        try:
+            output = subprocess.check_output(command, stderr = subprocess.PIP).strip()
+        except:
+            logging.info('ssh failed retrying in ' + str(options.pause) + ' seconds')
+            time.sleep(options.pause)
+        else:
+            return(output)
+    else:
+        logging.info('FAILED - all ssh attempts failed - EXITING')
+        sys.exit(1)
+
+
 def check_send(options, transfer_ids):
     transfers_complete = 0
     for transfer_id in transfer_ids:
