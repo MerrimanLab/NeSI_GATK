@@ -71,24 +71,26 @@ def parse_arguments():
 GLOBUS METHODS
 """
 #returns string for transfer_id
-def globus_send_file(globus_id, from_ep, to_ep, sample, file):
-    sshCommand = ["ssh",'-t', globus_id + "@cli.globusonline.org",
+def globus_send_file(options,from_ep ,to_ep, sample, file):
+    sshCommand = ["ssh",'-t', options.globus_id + "@cli.globusonline.org",
                    "transfer","--encrypt", "--label","'" + sample +"_up" + "'", "--", from_ep + file, to_ep + file]
-    return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(), 'utf-8').split()[2])
+#    return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(), 'utf-8').split()[2])
+    return(str(run_ssh(options, sshCommand), 'utf-8').split()[2] )
 
 
 # returns string of the globus transfer status (ACTIVE, SUCCEEDED, etc)
-def check_globus_transfer(globus_id, transfer_id):
-    sshCommand = ["ssh",'-t', globus_id + "@cli.globusonline.org", "details","-f","status", transfer_id]
-    return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(),'utf-8').split()[1] )
+def check_globus_transfer(options, transfer_id):
+    sshCommand = ["ssh",'-t', options.globus_id + "@cli.globusonline.org", "details","-f","status", transfer_id]
+#    return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(),'utf-8').split()[1] )
+    return(str(run_ssh(options,sshCommand),'utf-8').split()[1])
 
 
 # returns string for transfer_id
-def globus_send_dir(globus_id, from_ep, to_ep, sample):
-    sshCommand = ["ssh",'-t', globus_id + "@cli.globusonline.org",
+def globus_send_dir(options, from_ep, to_ep, sample):
+    sshCommand = ["ssh",'-t', options.globus_id + "@cli.globusonline.org",
                    "transfer", "--encrypt","--label", "'" + sample + "_dir_down" + "'", "--", from_ep, to_ep, "-r"]
-    return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(), 'utf-8').split()[2])
-
+ #   return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(), 'utf-8').split()[2])
+    return(str(run_ssh(options,sshCommand), 'utf-8').split()[2])
 
 
 """
@@ -109,26 +111,29 @@ def nesi_start(options, sample, read1, read2):
     path = '/gpfs1m/projects/' + options.project + "/working_dir/" + sample + '/'
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz' ]
     command = ["cd", path , "&&", "sbatch", "~/NeSI_GATK/s0_split.sl","$(pwd)", read1, read2, sample]
-    subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
-
+#    subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
+    run_ssh(options, sshCommand + command)
 
 def check_nesi(options, path):
     #path = '/gpfs1m/projects/' + options.project + "/working_dir/" + sample
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['ls', path]
-    files = str(subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip(), 'utf-8').split()
+#    files = str(subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip(), 'utf-8').split()
+    files = str(run_ssh(options, sshCommand + command), 'utf-8').split()
     return(files)
 
 
 def nesi_sample_rmdir(options, sample):
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz' , "rm","-r","/gpfs1m/projects/"+options.project+"/working_dir/"+sample]
-    subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip()
+ #   subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip()
+    run_ssh(options, sshCommand)
 
 
 def nesi_sample_rg(options, samples_dict, sample):
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['echo','\"' + samples_dict[sample][0] +'\"','>', '/gpfs1m/projects/'+ options.project +'/working_dir/'+sample+'/input/rg_info.txt']
-    subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
+#    subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
+    run_ssh(options, sshCommand + command)
 
 
 """
@@ -146,13 +151,13 @@ def run_ssh(options,command):
             return(output)
     else:
         logging.info('FAILED - all ssh attempts failed - EXITING')
-        sys.exit(1)
+        exit(1)
 
 
 def check_send(options, transfer_ids):
     transfers_complete = 0
     for transfer_id in transfer_ids:
-          if (check_globus_transfer(options.globus_id, transfer_id) == 'SUCCEEDED'):
+          if (check_globus_transfer(options, transfer_id) == 'SUCCEEDED'):
                 transfers_complete =  transfers_complete + 1
     if(transfers_complete ==  len(transfer_ids)):
         return (True)
@@ -179,7 +184,7 @@ def exclude_samples(sample_dict, finished_samples):
     return(sample_dict)
 
 
-def write_finished_sample(options, sample):
+d ef write_finished_sample(options, sample):
     with open(options.finished_file,'a') as f:
         f.write(sample + '\n')
     f.close()
@@ -233,8 +238,8 @@ def process_samples(options, samples_dict):
         print(sample)
         fq1 = samples_dict[sample][len(samples_dict[sample])-2]
         fq2 = samples_dict[sample][len(samples_dict[sample])-1]
-        sample_fq = [globus_send_file(options.globus_id, options.globus_source_ep , options.globus_nesi_ep + path + 'input/', sample, fq1),
-                 globus_send_file(options.globus_id, options.globus_source_ep , options.globus_nesi_ep +path+ 'input/', sample,  fq2)]
+        sample_fq = [globus_send_file(options, options.globus_source_ep , options.globus_nesi_ep + path + 'input/', sample, fq1),
+                 globus_send_file(options, options.globus_source_ep , options.globus_nesi_ep +path+ 'input/', sample,  fq2)]
         logging.info('sample: '+ sample+ " fastq started transfer up")
         # check transfer successful
         transfer = False
@@ -259,7 +264,7 @@ def process_samples(options, samples_dict):
         logging.info('sample: '+sample+ ' GATK pipeline finished')
         if(finished != 'Failed'):
             # transfer back
-            results = [globus_send_dir(options.globus_id, options.globus_nesi_ep + path + 'final/', options.globus_results_ep + '/' + sample + '/', sample)]
+            results = [globus_send_dir(options, options.globus_nesi_ep + path + 'final/', options.globus_results_ep + '/' + sample + '/', sample)]
             transfer = False
             while(transfer == False):
                 transfer = check_send(options, results)
