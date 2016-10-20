@@ -38,9 +38,24 @@ if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MergeSamFiles $(sed 's/^/I=
 	exit 1
 fi
 
-JOBID=$(sbatch ~/NeSI_GATK/s4_markdup.sl $DIR $sample)
-JOBID=$(echo $JOBID | awk '{print $4}')
-echo "s4_markdup $JOBID" >> $DIR/jobs.txt
+Ncontigs=$(cat ~/NeSI_GATK/contigs_h37.txt | wc -l)
+
+JOBID=$(sbatch --array=1-$Ncontigs ~/NeSI_GATK/s4_markdup.sl $DIR $sample)
+
+
+JOBID2=$(sbatch -d $(echo $JOBID |awk '{print $4}') -J s5_baserecal --array=1-$Ncontigs ~/NeSI_GATK/s5_baserecal.sl $DIR $sample)
+JOBID3=$(sbatch -d $(echo $JOBID2 | awk '{print $4}') -J s6_applyrecal --array=1-$Ncontigs ~/NeSI_GATK/s6_applyrecal.sl $DIR $sample)
+JOBID4=$(sbatch -d $(echo $JOBID3 | awk '{print $4}') -J s7_haplotypecaller --array=1-$Ncontigs ~/NeSI_GATK/s7_haplotypecaller.sl $DIR $sample)
+JOBID5=$(sbatch -d $(echo $JOBID4 | awk '{print $4}') ~/NeSI_GATK/s8_finish.sl $DIR)
+
+echo markdup $(echo $JOBID | awk '{print $4}') >> $DIR/jobs.txt
+echo baserecal $(echo $JOBID2 | awk '{print $4}') >> $DIR/jobs.txt
+echo applyrecal $(echo $JOBID3 | awk '{print $4}') >> $DIR/jobs.txt
+echo haplotypecaller $(echo $JOBID4 | awk '{print $4}') >> $DIR/jobs.txt
+echo finish $(echo $JOBID5 | awk '{print $4}') >> $DIR/jobs.txt
+echo index finish $(date "+%H:%M:%S %d-%m-%Y")
+
+
 
 rm $DIR/temp/${sample}_aligned_reads_*.bam 
 echo merge_bam finish $(date "+%H:%M:%S %d-%m-%Y")
