@@ -21,19 +21,23 @@ DIR=$1
 sample=$2
 export OPENBLAS_MAIN_FREE=1
 source ~/NeSI_GATK/gatk_references.sh
+i=$SLURM_ARRAY_TASK_ID
 
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
 module load picard/2.1.0
-if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam INPUT=$DIR/temp/${sample}_gathered.bam OUTPUT=$DIR/temp/${sample}_sorted_reads.bam SORT_ORDER=coordinate TMP_DIR=$DIR ; then
-	echo "sort sam failed"
-	echo 'sort failed' > $DIR/final/failed.txt
+if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam \
+                                                    INPUT=$DIR/temp/${sample}_aligned_reads_${i}.bam
+                                                    OUTPUT=$DIR/temp/${sample}_sorted_${i}.bam \
+                                                    SORT_ORDER=coordinate \
+                                                    CREATE_INDEX=true \
+                                                    TMP_DIR=$DIR ; then
+	echo "sort sam failed chunk ${i}"
+	echo "sort failed chunk ${i}" >> $DIR/final/failed.txt
 	exit 1
 fi
 echo sort finish $(date "+%H:%M:%S %d-%m-%Y")
 
-JOBID=$(sbatch ~/NeSI_GATK/s3_markdup.sl $DIR $sample)
-echo s3_markdup $(echo $JOBID | awk '{print $4}') >> $DIR/jobs.txt
-rm $DIR/temp/${sample}_gathered.bam
+rm $DIR/temp/${sample}_aligned_reads_${i}.bam
