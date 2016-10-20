@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J s7_baseRecal
+#SBATCH -J s5_baseRecal
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=31024  # memory/cpu (in MB)
@@ -45,6 +45,5 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	touch $DIR/final/failed.txt
 	exit 1
 fi
-#sbatch -J s8_applyrecal_chr${i} ~/NeSI_GATK/s8_applyrecal.sl ${DIR} ${sample} ${chr}
 echo baserecal finish $(date "+%H:%M:%S %d-%m-%Y")
 

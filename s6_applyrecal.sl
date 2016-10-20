@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J s8_printReads
+#SBATCH -J s6_printReads
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=31024  # memory/cpu (in MB)
@@ -19,10 +19,8 @@ echo applyrecal start $(date "+%H:%M:%S %d-%m-%Y")
 
 export OPENBLAS_MAIN_FREE=1
 
-#i=$SLURM_ARRAY_TASK_ID
 DIR=$1
 sample=$2
-#chr=$3
 chr=$(cat ~/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(NR == line){print}}')
 
 source ~/NeSI_GATK/gatk_references.sh
@@ -44,7 +42,5 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	exit 1
 fi
 
-#JOB=$(sbatch -J s9_haplotypecaller_chr${chr} ~/NeSI_GATK/s9_haplotypecaller.sl $DIR $sample $chr)
-#echo "chr $i haplotypecaller job submitted $JOB"
 echo applyrecal finish $(date "+%H:%M:%S %d-%m-%Y")
 

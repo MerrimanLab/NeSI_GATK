@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J s9_haplotypeCaller
+#SBATCH -J s7_haplotypeCaller
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=4048  # memory/cpu (in MB)
