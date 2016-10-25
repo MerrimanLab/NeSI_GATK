@@ -104,8 +104,8 @@ def make_nesi_dir_structure(options, samples):
     path = '/gpfs1m/projects/' + options.project + "/" + 'working_dir/' + names+ "/{input,temp,logs,final}"
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['mkdir','-p',path,]
-    subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
-
+    #subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
+    run_ssh(options, sshCommand + command)
 
 def nesi_start(options, sample, read1, read2):
     path = '/gpfs1m/projects/' + options.project + "/working_dir/" + sample + '/'
