@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J s2_sortSam.sl
 #SBATCH -A uoo00053         # Project Account
-#SBATCH --time=11:59:00     # Walltime
+#SBATCH --time=05:59:00     # Walltime
 #SBATCH --mem-per-cpu=24000  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
 #SBATCH --nodes=1
@@ -29,7 +29,7 @@ i=$SLURM_ARRAY_TASK_ID
 
 module load picard/2.1.0
 if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam \
-                                                    INPUT=$DIR/temp/${sample}_aligned_reads_${i}.bam
+                                                    INPUT=$DIR/temp/${sample}_aligned_reads_${i}.bam \
                                                     OUTPUT=$DIR/temp/${sample}_sorted_${i}.bam \
                                                     SORT_ORDER=coordinate \
                                                     CREATE_INDEX=true \

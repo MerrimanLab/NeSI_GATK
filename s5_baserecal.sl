@@ -28,7 +28,7 @@ module load GATK/3.6-Java-1.8.0_40
 if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T BaseRecalibrator \
 	-R $REF \
-	-I $DIR/temp/${sample}_dedup_reads.bam \
+	-I $DIR/temp/${sample}_dedup_reads_${chr}.bam \
 	-o $DIR/temp/${sample}_recal_data_${chr}.grp \
 	-knownSites $DBSNP \
 	-knownSites $MILLS \
@@ -42,7 +42,7 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-L ${chr} ; then
 
 	echo "base recal on chr $i failed"
-	touch $DIR/final/failed.txt
+	echo "base recal failed" >> $DIR/final/failed.txt
 	exit 1
 fi
 echo baserecal finish $(date "+%H:%M:%S %d-%m-%Y")

@@ -39,7 +39,7 @@ then
     JOBID=$(sbatch --array=1-$file1Num ~/NeSI_GATK/s1_align.sl $DIR $sample)
     JOBID=$(echo $JOBID | awk '{print $4}')
     sleep 20
-    JOBID2=$(sbatch -d $JOBID --array=1-$fileNum ~/NeSI_GATK/s2_sortSam.sl $DIR $sample)
+    JOBID2=$(sbatch -d $JOBID --array=1-$file1Num ~/NeSI_GATK/s2_sortSam.sl $DIR $sample)
     JOBID2=$(echo $JOBID2 | awk '{print $4}')
     JOBID3=$(sbatch -d $JOBID2 ~/NeSI_GATK/s3_merge_bams.sl $DIR $sample)
     JOBID3=$(echo $JOBID3 | awk '{print $4}')

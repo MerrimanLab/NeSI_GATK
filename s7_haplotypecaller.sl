@@ -40,7 +40,7 @@ if ! srun java -jar -Xmx30g $EBROOTGATK/GenomeAnalysisTK.jar \
 	-nct ${SLURM_JOB_CPUS_PER_NODE} ; then
 
 	echo "haplotypecalled on chr $chr failed"
-	echo 'haplotypecaller failed' > $DIR/final/failed.txt
+	echo 'haplotypecaller failed' >> $DIR/final/failed.txt
 	exit 1
 fi
 echo haplotypecaller finish $(date "+%H:%M:%S %d-%m-%Y")

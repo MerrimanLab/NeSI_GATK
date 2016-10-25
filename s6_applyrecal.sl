@@ -31,14 +31,14 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T PrintReads \
 	-R $REF \
 	-BQSR $DIR/temp/${sample}_recal_data_${chr}.grp \
-	-I $DIR/temp/${sample}_dedup_reads.bam \
+	-I $DIR/temp/${sample}_dedup_reads_${chr}.bam \
 	-o $DIR/final/${sample}_baserecal_reads_${chr}.bam \
 	-l INFO \
 	-log $DIR/logs/printreads_${chr}.log \
 	-L ${chr} ; then
 
 	echo "print reads on chr $i failed"
-	echo 'print reads failed' > $DIR/final/failed.txt
+	echo 'print reads failed' >> $DIR/final/failed.txt
 	exit 1
 fi
 
