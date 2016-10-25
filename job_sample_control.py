@@ -74,14 +74,12 @@ GLOBUS METHODS
 def globus_send_file(options,from_ep ,to_ep, sample, file):
     sshCommand = ["ssh",'-t', options.globus_id + "@cli.globusonline.org",
                    "transfer","--encrypt", "--label","'" + sample +"_up" + "'", "--", from_ep + file, to_ep + file]
-#    return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(), 'utf-8').split()[2])
     return(str(run_ssh(options, sshCommand), 'utf-8').split()[2] )
 
 
 # returns string of the globus transfer status (ACTIVE, SUCCEEDED, etc)
 def check_globus_transfer(options, transfer_id):
     sshCommand = ["ssh",'-t', options.globus_id + "@cli.globusonline.org", "details","-f","status", transfer_id]
-#    return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(),'utf-8').split()[1] )
     return(str(run_ssh(options,sshCommand),'utf-8').split()[1])
 
 
@@ -89,7 +87,6 @@ def check_globus_transfer(options, transfer_id):
 def globus_send_dir(options, from_ep, to_ep, sample):
     sshCommand = ["ssh",'-t', options.globus_id + "@cli.globusonline.org",
                    "transfer", "--encrypt","--label", "'" + sample + "_dir_down" + "'", "--", from_ep, to_ep, "-r"]
- #   return(str(subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip(), 'utf-8').split()[2])
     return(str(run_ssh(options,sshCommand), 'utf-8').split()[2])
 
 
@@ -104,35 +101,30 @@ def make_nesi_dir_structure(options, samples):
     path = '/gpfs1m/projects/' + options.project + "/" + 'working_dir/' + names+ "/{input,temp,logs,final}"
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['mkdir','-p',path,]
-    #subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
     run_ssh(options, sshCommand + command)
 
 def nesi_start(options, sample, read1, read2):
     path = '/gpfs1m/projects/' + options.project + "/working_dir/" + sample + '/'
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz' ]
     command = ["cd", path , "&&", "sbatch", "~/NeSI_GATK/s0_split.sl","$(pwd)", read1, read2, sample]
-#    subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
     run_ssh(options, sshCommand + command)
 
 def check_nesi(options, path):
     #path = '/gpfs1m/projects/' + options.project + "/working_dir/" + sample
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['ls', path]
-#    files = str(subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip(), 'utf-8').split()
     files = str(run_ssh(options, sshCommand + command), 'utf-8').split()
     return(files)
 
 
 def nesi_sample_rmdir(options, sample):
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz' , "rm","-r","/gpfs1m/projects/"+options.project+"/working_dir/"+sample]
- #   subprocess.check_output(sshCommand, stderr = subprocess.PIPE).strip()
     run_ssh(options, sshCommand)
 
 
 def nesi_sample_rg(options, samples_dict, sample):
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['echo','\"' + samples_dict[sample][0] +'\"','>', '/gpfs1m/projects/'+ options.project +'/working_dir/'+sample+'/input/rg_info.txt']
-#    subprocess.check_output(sshCommand + command, stderr = subprocess.PIPE).strip()
     run_ssh(options, sshCommand + command)
 
 
@@ -142,8 +134,10 @@ LOCAL METHODS
 
 def run_ssh(options,command):
     for attempt in range(100):
+        #print(" ".join(command))
         try:
-            output = subprocess.check_output(command, stderr = subprocess.PIP).strip()
+            output = subprocess.check_output(command, stderr = subprocess.PIPE).strip()
+            logging.info('ssh command successful: ' + " ".join(command))
         except:
             logging.info('ssh failed retrying in ' + str(options.pause) + ' seconds')
             time.sleep(options.pause)
@@ -184,7 +178,7 @@ def exclude_samples(sample_dict, finished_samples):
     return(sample_dict)
 
 
-d ef write_finished_sample(options, sample):
+def write_finished_sample(options, sample):
     with open(options.finished_file,'a') as f:
         f.write(sample + '\n')
     f.close()
