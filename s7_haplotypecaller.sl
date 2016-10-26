@@ -3,7 +3,7 @@
 #SBATCH -A uoo00053         # Project Account
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=4048  # memory/cpu (in MB)
-#SBATCH --cpus-per-task=12   # 12 OpenMP Threads
+#SBATCH --cpus-per-task=8   # 12 OpenMP Threads
 #SBATCH -C sb
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=FAIL,TIME_LIMIT_90
