@@ -16,7 +16,7 @@
 # Matt Bixley
 # University of Otago
 # Jun 2016
-echo gather start $(date "+%H:%M:%S %d-%m-%Y")
+echo merge_bam start $(date "+%H:%M:%S %d-%m-%Y")
 
 DIR=$1
 sample=$2
@@ -53,7 +53,6 @@ echo baserecal $(echo $JOBID2 | awk '{print $4}') >> $DIR/jobs.txt
 echo applyrecal $(echo $JOBID3 | awk '{print $4}') >> $DIR/jobs.txt
 echo haplotypecaller $(echo $JOBID4 | awk '{print $4}') >> $DIR/jobs.txt
 echo finish $(echo $JOBID5 | awk '{print $4}') >> $DIR/jobs.txt
-echo index finish $(date "+%H:%M:%S %d-%m-%Y")
 
 
 
