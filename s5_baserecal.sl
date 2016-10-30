@@ -45,5 +45,6 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	echo "base recal failed" >> $DIR/final/failed.txt
 	exit 1
 fi
+rm $DIR/temp/${sample}_gathered.ba[mi]
 echo baserecal finish $(date "+%H:%M:%S %d-%m-%Y")
 

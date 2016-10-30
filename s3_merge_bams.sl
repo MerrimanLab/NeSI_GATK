@@ -56,6 +56,7 @@ echo finish $(echo $JOBID5 | awk '{print $4}') >> $DIR/jobs.txt
 
 
 
-rm $DIR/temp/${sample}_aligned_reads_*.bam 
+rm $DIR/temp/${sample}_aligned_reads_*.ba[mi]
+rm $DIR/temp/${sample}_sorted_*.ba[mi] 
 echo merge_bam finish $(date "+%H:%M:%S %d-%m-%Y")
 
