@@ -41,6 +41,6 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	echo 'print reads failed' >> $DIR/final/failed.txt
 	exit 1
 fi
-
+rm $DIR/temp/${sample}_dedup_reads_${chr}.ba*
 echo applyrecal finish $(date "+%H:%M:%S %d-%m-%Y")
 
