@@ -43,5 +43,6 @@ if ! srun java -jar -Xmx30g $EBROOTGATK/GenomeAnalysisTK.jar \
 	echo 'haplotypecaller failed' >> $DIR/final/failed.txt
 	exit 1
 fi
+~/pigz-2.3.3/pigz -p ${SLURM_JOB_CPUS_PER_NODE} $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf
 echo haplotypecaller finish $(date "+%H:%M:%S %d-%m-%Y")
 
