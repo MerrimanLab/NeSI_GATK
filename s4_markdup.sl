@@ -44,8 +44,6 @@ if ! srun java -Xmx19g -jar $EBROOTPICARD/picard.jar MarkDuplicates \
 	echo "markdup failed" >> $DIR/final/failed.txt
 	exit 1
 fi
-JOBID=$(sbatch ~/NeSI_GATK/s4_index.sl $DIR $sample)
-echo index $(echo $JOBID | awk '{print $4'}) >> $DIR/jobs.txt
 rm $DIR/temp/${chr}.bam 
 
 
