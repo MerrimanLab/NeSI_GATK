@@ -106,7 +106,7 @@ def make_nesi_dir_structure(options, samples):
 def nesi_start(options, sample, read1, read2):
     path = '/gpfs1m/projects/' + options.project + "/working_dir/" + sample + '/'
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz' ]
-    command = ["cd", path , "&&", "sbatch", "~/NeSI_GATK/s0_split.sl","$(pwd)", read1, read2, sample]
+    command = ["cd", path , "&&", "sbatch","-A",options.project, "~/NeSI_GATK/s0_split.sl","$(pwd)", read1, read2, sample]
     run_ssh(options, sshCommand + command)
 
 def check_nesi(options, path):
@@ -151,8 +151,11 @@ def run_ssh(options,command):
 def check_send(options, transfer_ids):
     transfers_complete = 0
     for transfer_id in transfer_ids:
-          if (check_globus_transfer(options, transfer_id) == 'SUCCEEDED'):
-                transfers_complete =  transfers_complete + 1
+        stat = check_globus_transfer(options,transfer_id)
+        if (stat == 'SUCCEEDED'):
+            transfers_complete =  transfers_complete + 1
+        elif (stat == 'FAILED'):
+            return('FAILED')
     if(transfers_complete ==  len(transfer_ids)):
         return (True)
     else:
@@ -221,6 +224,10 @@ def poll_files(options, sample):
         return (False)
 
 
+def failed_sample(options, sample, message):
+     write_failed_sample(options,sample)
+     logging.info('FAILED sample: ' + sample)
+     print(sample + ' ' + message)
 
 
 def process_samples(options, samples_dict):
@@ -241,6 +248,10 @@ def process_samples(options, samples_dict):
             transfer = check_send(options, sample_fq)
             if( transfer == False):
                 time.sleep(options.pause)
+        # skip to next sample on transfer fail (or cancel)
+        if(transfer == "FAILED"):
+            failed_sample(options,sample,"FAILED - Transfer")
+            continue
         logging.info('sample: '+ sample + " fastq transfer finished")
         # start nesi job
         nesi_sample_rg(options, samples_dict, sample)
@@ -250,7 +261,6 @@ def process_samples(options, samples_dict):
         # check finished
         finished = False
         while(finished == False):
-
             finished = poll_files(options, sample)
             #logging.info('checking for finished pollfiles: ' + str(finished))
             if( finished == False):
@@ -264,6 +274,10 @@ def process_samples(options, samples_dict):
                 transfer = check_send(options, results)
                 if( transfer == False):
                     time.sleep(options.pause)
+            #skip to next sample on transfer fail (or cancel)
+            if(transfer == 'FAILED'):
+                failed_sample(options,sample,"FAILED - Transfer")
+                continue
             # write out finished sample id
             write_finished_sample(options, sample)
             logging.info('sample: ' + sample + ' results transferred back')
@@ -272,9 +286,8 @@ def process_samples(options, samples_dict):
             nesi_sample_rmdir(options, sample)
             logging.info('sample: ' + sample + ' nesi directory removed')
         else:
-            write_failed_sample(options, sample)
-            logging.info('FAILED sample: '+ sample)
-            print(sample + " FAILED - go and investigate")
+            failed_sample(options,sample,"FAILED - go and investigate")
+
 
 
 def main():
