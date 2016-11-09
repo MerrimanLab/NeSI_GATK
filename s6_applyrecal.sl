@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J s6_printReads
+#SBATCH -J s6_applyrecal
 #SBATCH -A nesi00319         # Project Account
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=31024  # memory/cpu (in MB)
