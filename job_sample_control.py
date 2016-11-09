@@ -94,12 +94,8 @@ def globus_send_dir(options, from_ep, to_ep, sample):
 """
 NESI METHODS
 """
-def make_nesi_dir_structure(options, samples):
-    if(len(samples) > 1):
-        names = "{" + ','.join(samples)+ "}"
-    else:
-        names = "".join(samples)
-    path = '/gpfs1m/projects/' + options.project + "/" + 'working_dir/' + names+ "/{input,temp,logs,final}"
+def make_nesi_dir_structure(options, sample):
+    path = '/gpfs1m/projects/' + options.project + "/" + 'working_dir/' + sample + "/{input,temp,logs,final}"
     sshCommand = ['ssh','-t',options.username + '@login.uoa.nesi.org.nz']
     command = ['mkdir','-p',path,]
     run_ssh(options, sshCommand + command)
@@ -236,6 +232,8 @@ def process_samples(options, samples_dict):
     finished = []
     for sample in samples_dict:
         # send fastqs
+        make_nesi_dir_structure(options, sample)
+        logging.info('nesi file structure made')
         path = '/gpfs1m/projects/' + options.project + "/working_dir/" + sample +'/'
         print(sample)
         fq1 = samples_dict[sample][len(samples_dict[sample])-2]
@@ -316,8 +314,6 @@ def main():
     if(len(samples) == 0):
         logging.info('No samples to process')
         sys.exit()
-    make_nesi_dir_structure(options, samples)
-    logging.info('nesi file structure made')
     process_samples(options, samples_dict)
 
 if __name__ == "__main__":
