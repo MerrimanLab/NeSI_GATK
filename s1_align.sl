@@ -2,7 +2,7 @@
 #SBATCH -J s1_align.sl
 #SBATCH -A nesi00319         # Project Account
 #SBATCH --time=5:59:00     # Walltime
-#SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
+#SBATCH --mem-per-cpu=2000  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=8   # 12 OpenMP Threads
 #SBATCH --nodes=1
 #SBATCH -C sb

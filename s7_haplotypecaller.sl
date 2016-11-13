@@ -26,6 +26,10 @@ chr=$(cat ~/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(
 source ~/NeSI_GATK/gatk_references.sh
 
 module load GATK/3.6-Java-1.8.0_40
+if [[ 23 > ${SLURM_ARRAY_TASK_ID} ]]
+then
+	echo 'haplotypecaller $chr is under 23'
+fi
 
 if ! srun java -jar -Xmx30g $EBROOTGATK/GenomeAnalysisTK.jar \
 	-T HaplotypeCaller \
@@ -40,9 +44,17 @@ if ! srun java -jar -Xmx30g $EBROOTGATK/GenomeAnalysisTK.jar \
 	-nct ${SLURM_JOB_CPUS_PER_NODE} ; then
 
 	echo "haplotypecalled on chr $chr failed"
-	echo 'haplotypecaller failed' >> $DIR/final/failed.txt
+	echo "$chr" >> $DIR/final/failed_hc_contigs.txt
+	if [[ 23 > ${SLURM_ARRAY_TASK_ID} ]]
+	then
+		echo 'haplotypecaller failed' >> $DIR/final/failed.txt
+	fi
 	exit 1
 fi
-~/pigz-2.3.3/pigz -p ${SLURM_JOB_CPUS_PER_NODE} $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf
+
+if ! srun ~/pigz-2.3.3/pigz -p ${SLURM_JOB_CPUS_PER_NODE} $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf
+then
+	echo "pigz failed $chr"
+fi
 echo haplotypecaller finish $(date "+%H:%M:%S %d-%m-%Y")
 
