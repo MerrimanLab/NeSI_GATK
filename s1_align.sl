@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J s1_align.sl
-#SBATCH -A uoo00053         # Project Account
+#SBATCH -A nesi00319         # Project Account
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=4000  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=8   # 12 OpenMP Threads

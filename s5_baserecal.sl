@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J s5_baseRecal
-#SBATCH -A uoo00053         # Project Account
+#SBATCH -A nesi00319         # Project Account
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=31024  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
@@ -45,5 +45,6 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/GenomeAnalysisTK.jar \
 	echo "base recal failed" >> $DIR/final/failed.txt
 	exit 1
 fi
+rm $DIR/temp/${sample}_gathered.ba[mi]
 echo baserecal finish $(date "+%H:%M:%S %d-%m-%Y")
 

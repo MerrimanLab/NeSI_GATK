@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J s8_finish.sl
-#SBATCH -A uoo00053         # Project Account
+#SBATCH -A nesi00319         # Project Account
 #SBATCH --time=0:10:00     # Walltime
 #SBATCH --mem-per-cpu=512  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
