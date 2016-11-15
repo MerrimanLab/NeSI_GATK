@@ -40,7 +40,7 @@ def parse_arguments():
     data_options.add_option('--sample-file', dest='sample_file', help = 'path to file containing sample information\n' +
                            "Sample file is in format '<sample> <RG> <R1.fastq.gz> <R2.fastq.gz>'"
                            )
-    daata_options.add_option('--sample', dest = 'sample_id', help = 'optional: id of single sample to process - must be in the sample file')
+    data_options.add_option('--sample', dest = 'sample_id', help = 'optional: id of single sample to process - must be in the sample file')
     data_options.add_option('--finished-file', dest = 'finished_file', help = 'path to file to record samples as they finish, also used to resume from')
     parser.add_option_group(nesi_options)
     parser.add_option_group(globus_options)
