@@ -42,14 +42,14 @@ Ncontigs=$(cat ~/NeSI_GATK/contigs_h37.txt | wc -l)
 
 JOBID=$(sbatch --array=1-$Ncontigs ~/NeSI_GATK/s4_markdup.sl $DIR $sample)
 
-JOBID2_1=$(sbatch -d afterok:$(echo $JOBID |awk '{print $4}') -J s5_baserecal_1 --array=1-22 ~/NeSI_GATK/s5_baserecal.sl $DIR $sample)
-JOBID2_2=$(sbatch -d afterok:$(echo $JOBID |awk '{print $4}') -J s5_baserecal_2 --array=23-$Ncontigs --time=3:00:00 ~/NeSI_GATK/s5_baserecal.sl $DIR $sample)
+JOBID2_1=$(sbatch -d afterok:$(echo $JOBID |awk '{print $4}') -J s5_baserecal_1 --array=1-24 ~/NeSI_GATK/s5_baserecal.sl $DIR $sample)
+JOBID2_2=$(sbatch -d afterok:$(echo $JOBID |awk '{print $4}') -J s5_baserecal_2 --array=25-$Ncontigs --time=3:00:00 ~/NeSI_GATK/s5_baserecal.sl $DIR $sample)
 
-JOBID3_1=$(sbatch -d afterok:$(echo $JOBID2_1 | awk '{print $4}') -J s6_applyrecal_1 --array=1-22 ~/NeSI_GATK/s6_applyrecal.sl $DIR $sample)
-JOBID3_2=$(sbatch -d afterok:$(echo $JOBID2_2 | awk '{print $4}') -J s6_applyrecal_2 --array=23-$Ncontigs --time=3:00:00 ~/NeSI_GATK/s6_applyrecal.sl $DIR $sample)
+JOBID3_1=$(sbatch -d afterok:$(echo $JOBID2_1 | awk '{print $4}') -J s6_applyrecal_1 --array=1-24 ~/NeSI_GATK/s6_applyrecal.sl $DIR $sample)
+JOBID3_2=$(sbatch -d afterok:$(echo $JOBID2_2 | awk '{print $4}') -J s6_applyrecal_2 --array=25-$Ncontigs --time=3:00:00 ~/NeSI_GATK/s6_applyrecal.sl $DIR $sample)
 
-JOBID4_1=$(sbatch -d afterok:$(echo $JOBID3 | awk '{print $4}') -J s7_haplotypecaller_1 --array=1-22 ~/NeSI_GATK/s7_haplotypecaller.sl $DIR $sample)
-JOBID4_2=$(sbatch -d afterok:$(echo $JOBID3_2 | awk '{print $4}') --time=3:00:00 --mem-per-cpu=2048 -J s7_haplotypecaller_2 --array=23-$Ncontigs ~/NeSI_GATK/s7_haplotypecaller.sl $DIR $sample)
+JOBID4_1=$(sbatch -d afterok:$(echo $JOBID3_1 | awk '{print $4}') -J s7_haplotypecaller_1 --array=1-24 ~/NeSI_GATK/s7_haplotypecaller.sl $DIR $sample)
+JOBID4_2=$(sbatch -d afterok:$(echo $JOBID3_2 | awk '{print $4}') --time=3:00:00 --mem-per-cpu=4048 -J s7_haplotypecaller_2 --array=25-$Ncontigs ~/NeSI_GATK/s7_haplotypecaller.sl $DIR $sample)
 
 JOBID5=$(sbatch -d afterok:$(echo $JOBID4_1 | awk '{print $4}'),after:$(echo $JOBID4_2 | awk '{print $4}') ~/NeSI_GATK/s8_finish.sl $DIR)
 
