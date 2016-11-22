@@ -147,13 +147,16 @@ def run_ssh(options,command):
 
 def check_send(options, transfer_ids):
     transfers_complete = 0
+    failed = False
     for transfer_id in transfer_ids:
         stat = check_globus_transfer(options,transfer_id)
         if (stat == 'SUCCEEDED'):
             transfers_complete =  transfers_complete + 1
         elif (stat == 'FAILED'):
-            return('FAILED')
-    if(transfers_complete ==  len(transfer_ids)):
+            failed = True
+    if( failed == True ):
+        return('FAILED')
+    elif(transfers_complete ==  len(transfer_ids)):
         return (True)
     else:
         return (False)
@@ -305,7 +308,7 @@ def main():
         if(options.sample_id in samples):
             samples = options.sample_id
             # remove all other samples from sample_dict
-            s = sample_dict[options.sample_id]
+            s = samples_dict[options.sample_id]
             sample_dict = {}
             sample_dict[options.sample_id] = s
         else:
