@@ -56,7 +56,8 @@ JOBID5=$(sbatch -d afterok:$(echo $JOBID4_1 | awk '{print $4}'),after:$(echo $JO
 
 echo markdup $(echo $JOBID | awk '{print $4}') >> $DIR/jobs.txt
 echo baserecal $(echo $JOBID2 | awk '{print $4}') >> $DIR/jobs.txt
-echo applyrecal $(echo $JOBID3 | awk '{print $4}') >> $DIR/jobs.txt
+echo applyrecal $(echo $JOBID3_1 | awk '{print $4}') >> $DIR/jobs.txt
+echo applyrecal $(echo $JOBID3_2 | awk '{print $4}') >> $DIR/jobs.txt
 echo haplotypecaller_1 $(echo $JOBID4_1 | awk '{print $4}') >> $DIR/jobs.txt
 echo haplotypecaller_2 $(echo $JOBID4_2 | awk '{print $4}') >> $DIR/jobs.txt
 echo finish $(echo $JOBID5 | awk '{print $4}') >> $DIR/jobs.txt

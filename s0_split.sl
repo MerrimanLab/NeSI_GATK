@@ -43,6 +43,7 @@ then
     JOBID2=$(echo $JOBID2 | awk '{print $4}')
     JOBID3=$(sbatch -d afterok:$JOBID2 ~/NeSI_GATK/s3_merge_bams.sl $DIR $sample)
     JOBID3=$(echo $JOBID3 | awk '{print $4}')
+    echo s0_split $SLURM_JOBID >> $DIR/jobs.txt
     echo s1_align $JOBID >> $DIR/jobs.txt
     echo s2_sortSam $JOBID2 >> $DIR/jobs.txt
     echo s3_merge_bam $JOBID3 >> $DIR/jobs.txt

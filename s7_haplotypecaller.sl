@@ -25,13 +25,14 @@ chr=$(cat ~/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(
 
 source ~/NeSI_GATK/gatk_references.sh
 
-module load GATK/3.6-Java-1.8.0_40
+#module load GATK/3.6-Java-1.8.0_40
+module load Java/1.8.0_5
 if [[ 23 > ${SLURM_ARRAY_TASK_ID} ]]
 then
 	echo 'haplotypecaller $chr is under 23'
 fi
 
-if ! srun java -jar -Xmx30g $EBROOTGATK/GenomeAnalysisTK.jar \
+if ! srun java -jar -Xmx30g ~/nesi00319/GATK3.6/nightly-19-11-2016/GenomeAnalysisTK.jar \
 	-T HaplotypeCaller \
 	-R $REF \
 	-I $DIR/final/${sample}_baserecal_reads_${chr}.bam \
