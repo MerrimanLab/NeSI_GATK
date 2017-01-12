@@ -4,14 +4,7 @@ if(!require(XML)){install.packages("XML"); require(XML)}
 #### if the above doesn't work, run the following in the terminal for ubuntu
 #### sudo apt-get install r-cran-xml
 
-#dir <- "/Users/mattbixley/Desktop/Batch1/"
-#batch <- "M001"
-#indir <- paste0("/media/otago_hsc/KCCG-Data/R_151102_MANPHI_FGS_",batch,"/")
-#outdir <- paste0("~/GIT_Repos/NeSI_GATK/SampleFiles/)
-#setwd(dir)
-#getwd()
-
-##### set up function to do parts of the work
+##### set up functions to do parts of the work
 
 ### function for generic reading of tables, colclasses read as character vectors and can be corrected in the final table
 table.reader <- function(batch,x){
@@ -86,10 +79,11 @@ read.group <- function(batch,samples=20){
 #################################################################################
 ######## end of functions
 
-### RUN A SUBMIT Job
-### create submit file, split to files with N samples
+# Example run with the output directory, batch 7 and ~30 samples per file
+
+#source("Readgroup.R")
 #outdir <- "~/GIT_Repos/NeSI_GATK/SampleFiles/"
-#read.group("M007",90)
+#read.group("M007",30)
 
 
 
