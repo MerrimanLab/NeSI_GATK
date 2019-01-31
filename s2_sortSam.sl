@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH -J s2_sortSam.sl
-#SBATCH -A nesi00319         # Project Account
 #SBATCH --time=05:59:00     # Walltime
 #SBATCH --mem-per-cpu=24001  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
@@ -20,7 +19,7 @@ echo sort start $(date "+%H:%M:%S %d-%m-%Y")
 DIR=$1
 sample=$2
 export OPENBLAS_MAIN_FREE=1
-source ~/NeSI_GATK/gatk_references.sh
+source ~/uoo02378/NeSI_GATK/gatk_references.sh
 i=$SLURM_ARRAY_TASK_ID
 
 #echo slurm jobib = $SLURM_JOBID > $SLURM_SUBMIT_DIR/dirs.txt

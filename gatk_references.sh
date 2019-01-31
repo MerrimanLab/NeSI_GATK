@@ -1,7 +1,9 @@
-export DBSNP=~/nesi00319/reference_files/dbsnp_138.b37.vcf
-export MILLS=~/nesi00319/reference_files/Mills_and_1000G_gold_standard.indels.b37.vcf
-export INDELS=~/nesi00319/reference_files/1000G_phase1.indels.b37.vcf
-export REF=~/nesi00319/reference_files/hs37d5/hs37d5.fa
+PROJECT=uoo02378
+
+export DBSNP=~/${PROJECT}/reference_files/dbsnp_138.b37.vcf
+export MILLS=~/${PROJECT}/reference_files/Mills_and_1000G_gold_standard.indels.b37.vcf
+export INDELS=~/${PROJECT}/reference_files/1000G_phase1.indels.b37.vcf
+export REF=~/${PROJECT}/reference_files/hs37d5/hs37d5.fa
 
 
 #########################
