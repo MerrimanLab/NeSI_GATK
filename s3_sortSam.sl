@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J s2_sortSam.sl
+#SBATCH -J s3_sortSam.sl
 #SBATCH --time=05:59:00     # Walltime
 #SBATCH --mem-per-cpu=24001  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
@@ -26,13 +26,18 @@ i=$SLURM_ARRAY_TASK_ID
 #echo slurm submit dir = $SLURM_SUBMIT_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
-module load picard/2.1.0
-if ! srun java -Xmx8g -jar $EBROOTPICARD/picard.jar SortSam \
-                                                    INPUT=$DIR/temp/${sample}_aligned_reads_${i}.bam \
-                                                    OUTPUT=$DIR/temp/${sample}_sorted_${i}.bam \
-                                                    SORT_ORDER=coordinate \
-                                                    CREATE_INDEX=true \
-                                                    TMP_DIR=$DIR ; then
+module load Java/1.8.0_144
+
+if ! srun java -Xmx8g -jar ~/uoo02378/picard/picard_2.18.25.jar SortSam \
+                                                    I=$DIR/temp/${sample}_aligned_reads_${i}.bam \
+                                                    O=/dev/stdout \
+                                                    SO=coordinate \
+                                                    CREATE_INDEX=false \
+                                                    TMP_DIR=$DIR |\
+	java -Xmx8g -jar ~/uoo02378/picard/picard_2.18.25.jar SetNmMdAndUqTags \
+      						    I=/dev/stdin \
+      						    O=$DIR/temp/${sample}_sorted_${i}.bam \
+						    R=$REF ; then
 	echo "sort sam failed chunk ${i}"
 	echo "sort failed chunk ${i}" >> $DIR/final/failed.txt
 	exit 1
