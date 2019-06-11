@@ -23,6 +23,9 @@ chr=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_
 
 source ~/uoo02378/NeSI_GATK/gatk_references.sh
 
+Ncontigs=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | wc -l)
+
+
 module load GATK/4.0.11.0-gimkl-2017a
 
 ls $DIR/temp/${sample}_recal_data_*.csv > $DIR/temp/reports.list
@@ -39,5 +42,7 @@ if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.0.11.0-local.jar \
 fi
 #rm $DIR/temp/${sample}_dedup_reads_${chr}.ba*
 echo gather reports finish $(date "+%H:%M:%S %d-%m-%Y")
-#	-I $DIR/temp/reports.txt \
+
+#JOBID3_1=$(sbatch -A uoo02378 -J s7_applyrecal_1 --array=1-24 ~/uoo02378/NeSI_GATK/s7_applyrecal.sl $DIR $sample)
+#JOBID3_2=$(sbatch -A uoo02378 -J s7_applyrecal_2 --array=25-$Ncontigs --time=3:00:00 ~/uoo02378/NeSI_GATK/s7_applyrecal.sl $DIR $sample)
 

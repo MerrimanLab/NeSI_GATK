@@ -1,10 +1,8 @@
 #!/bin/bash
 #SBATCH -J s7_haplotypeCaller
-#SBATCH -A nesi00319         # Project Account
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=4048  # memory/cpu (in MB)
-#SBATCH --cpus-per-task=8   # 12 OpenMP Threads
-#SBATCH -C sb
+#SBATCH --cpus-per-task=4   # 12 OpenMP Threads
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=FAIL,TIME_LIMIT_90
 
@@ -21,28 +19,33 @@ export OPENBLAS_MAIN_FREE=1
 
 DIR=$1
 sample=$2
-chr=$(cat ~/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(NR == line){print}}')
+chr=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(NR == line){print}}')
 
-source ~/NeSI_GATK/gatk_references.sh
+source ~/uoo02378/NeSI_GATK/gatk_references.sh
 
-#module load GATK/3.6-Java-1.8.0_40
-module load Java/1.8.0_5
+module load GATK/4.0.11.0-gimkl-2017a
+
+
+
+
 if [[ 23 > ${SLURM_ARRAY_TASK_ID} ]]
 then
 	echo 'haplotypecaller $chr is under 23'
 fi
 
-if ! srun java -jar -Xmx30g ~/nesi00319/GATK3.6/nightly-19-11-2016/GenomeAnalysisTK.jar \
-	-T HaplotypeCaller \
+#if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.0.11.0-local.jar 
+if ! srun gatk --java-options -Xmx30g --spark-runner LOCAL \
+	 HaplotypeCaller \
 	-R $REF \
 	-I $DIR/final/${sample}_baserecal_reads_${chr}.bam \
 	-L ${chr} \
-	--emitRefConfidence GVCF \
-	--variant_index_type LINEAR \
-	--variant_index_parameter 128000 \
+	-ERC GVCF \
 	--dbsnp $DBSNP \
-	-o $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf \
-	-nct ${SLURM_JOB_CPUS_PER_NODE} ; then
+	--max-alternate-alleles 3 \
+	--read-filter OverclippedReadFilter \
+	--add-output-vcf-command-line true \
+	--create-output-variant-index true \
+	-O $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf.gz ;  then
 
 	echo "haplotypecalled on chr $chr failed"
 	echo "$chr" >> $DIR/final/failed_hc_contigs.txt
@@ -53,9 +56,9 @@ if ! srun java -jar -Xmx30g ~/nesi00319/GATK3.6/nightly-19-11-2016/GenomeAnalysi
 	exit 1
 fi
 
-if ! srun ~/pigz-2.3.3/pigz -p ${SLURM_JOB_CPUS_PER_NODE} $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf
-then
-	echo "pigz failed $chr"
-fi
+#if ! srun ~/pigz-2.3.3/pigz -p ${SLURM_JOB_CPUS_PER_NODE} $DIR/final/${sample}_${chr}.raw.snps.indels.g.vcf
+#then
+#	echo "pigz failed $chr"
+#fi
 echo haplotypecaller finish $(date "+%H:%M:%S %d-%m-%Y")
 

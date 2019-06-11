@@ -17,16 +17,16 @@ file2Num=$(ls $DIR/temp/R2*fastq.gz | wc -l)
 
 if [[ $file1Num -eq $file2Num && $file1Num > 0 && $file2Num > 0 ]]
 then
-#    JOBID=$(sbatch --array=1-$file1Num ~/NeSI_GATK/s2_align.sl $DIR $sample)
-#    JOBID=$(echo $JOBID | awk '{print $4}')
-#    sleep 20
-#    JOBID2=$(sbatch -d afterok:$JOBID --array=1-$file1Num ~/NeSI_GATK/s3_sortSam.sl $DIR $sample)
-#    JOBID2=$(echo $JOBID2 | awk '{print $4}')
-#    JOBID3=$(sbatch -d afterok:$JOBID2 ~/NeSI_GATK/s4_markdup.sl $DIR $sample)
-#    JOBID3=$(echo $JOBID3 | awk '{print $4}')
-#    echo s2_align $JOBID >> $DIR/jobs.txt
-#    echo s3_sortSam $JOBID2 >> $DIR/jobs.txt
-#    echo s4_merge_bam $JOBID3 >> $DIR/jobs.txt
+    JOBID=$(sbatch -A uoo02378 --array=1-$file1Num ~/uoo02378/NeSI_GATK/s2_align.sl $DIR $sample)
+    JOBID=$(echo $JOBID | awk '{print $4}')
+    sleep 20
+    JOBID2=$(sbatch -A uoo02378 -d afterok:$JOBID --array=1-$file1Num ~/uoo02378/NeSI_GATK/s3_sortSam.sl $DIR $sample)
+    JOBID2=$(echo $JOBID2 | awk '{print $4}')
+    JOBID3=$(sbatch -d afterok:$JOBID2 ~/uoo02378/NeSI_GATK/s4_markdup.sl $DIR $sample)
+    JOBID3=$(echo $JOBID3 | awk '{print $4}')
+    echo s2_align $JOBID >> $DIR/jobs.txt
+    echo s3_sortSam $JOBID2 >> $DIR/jobs.txt
+    echo s4_merge_bam $JOBID3 >> $DIR/jobs.txt
 
     echo "sbatch -A uoo02378 --array=1-$file1Num ~/uoo02378/NeSI_GATK/s2_align.sl $DIR $sample"
     echo "sbatch -A uoo02378 -d afterok:$JOBID --array=1-$file1Num ~/uoo02378/NeSI_GATK/s3_sortSam.sl $DIR $sample"

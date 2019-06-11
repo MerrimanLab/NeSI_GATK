@@ -28,14 +28,14 @@ i=$SLURM_ARRAY_TASK_ID
 
 module load Java/1.8.0_144
 
-if ! srun java -Xmx8g -jar ~/uoo02378/picard/picard_2.18.25.jar SortSam \
+if ! srun java -Xmx8g -Djava.io.tmpdir=$DIR -Dsamjdk.use_async_io_write_samtools=false -jar ~/uoo02378/picard/picard_2.18.25.jar SortSam \
                                                     I=$DIR/temp/${sample}_aligned_reads_${i}.bam \
                                                     O=/dev/stdout \
                                                     SO=coordinate \
                                                     CREATE_INDEX=false \
-                                                    TMP_DIR=$DIR |\
-	java -Xmx8g -jar ~/uoo02378/picard/picard_2.18.25.jar SetNmMdAndUqTags \
-      						    I=/dev/stdin \
+                                                    |\
+	java -Xmx8g -Djava.io.tmpdir=$DIR -Dsamjdk.use_async_io_write_samtools=false -jar ~/uoo02378/picard/picard_2.18.25.jar SetNmMdAndUqTags \
+						    I=/dev/stdin \
       						    O=$DIR/temp/${sample}_sorted_${i}.bam \
 						    R=$REF ; then
 	echo "sort sam failed chunk ${i}"
@@ -44,4 +44,4 @@ if ! srun java -Xmx8g -jar ~/uoo02378/picard/picard_2.18.25.jar SortSam \
 fi
 echo sort finish $(date "+%H:%M:%S %d-%m-%Y")
 
-rm $DIR/temp/${sample}_aligned_reads_${i}.bam
+#rm $DIR/temp/${sample}_aligned_reads_${i}.bam
