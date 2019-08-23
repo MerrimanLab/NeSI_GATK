@@ -24,8 +24,7 @@ export OPENBLAS_MAIN_FREE=1
 
 i=$SLURM_ARRAY_TASK_ID
 module load BWA/0.7.15-gimkl-2017a 
-module load SAMtools/1.8-gimkl-2017a 
-
+module load SAMtools/1.9-GCC-7.4.0
 
 #RG="@RG\tID:group1\tSM:${sample}\tPL:illumina\tLB:lib1\tPU:unit1"
 if ! srun bwa mem -M -Y -t ${SLURM_JOB_CPUS_PER_NODE} -R ${RG} $REF $DIR/temp/R1_${i}.fastq.gz $DIR/temp/R2_${i}.fastq.gz 2> $DIR/logs/${sample}_${i}_bwa.log | samtools view -bh - > $DIR/temp/${sample}_aligned_reads_${i}.bam ; then

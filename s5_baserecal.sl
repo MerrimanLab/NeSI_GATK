@@ -20,10 +20,14 @@ DIR=$1
 sample=$2
 chr=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_ID} '{if(NR == line){print}}')
 
-module load GATK/4.0.11.0-gimkl-2017a
+#module load GATK/4.0.11.0-gimkl-2017a
 
+module restore
+module load GATK/4.1.0.0-gimkl-2017a
 
-if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.0.11.0-local.jar \
+export GATK_LOCAL_JAR=$EBROOTGATK/gatk-package-4.1.0.0-local.jar
+#if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.1.0.0-local.jar \
+if ! srun $EBROOTGATK/gatk --java-options "-Xmx30g" --spark-runner LOCAL \
 	 BaseRecalibrator \
 	-R $REF \
 	-I $DIR/temp/${sample}_dedup_reads.bam \

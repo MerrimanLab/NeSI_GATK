@@ -23,10 +23,11 @@ chr=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_
 
 source ~/uoo02378/NeSI_GATK/gatk_references.sh
 
-module load GATK/4.0.11.0-gimkl-2017a
+module restore
+module load GATK/4.1.0.0-gimkl-2017a
 
 
-if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.0.11.0-local.jar \
+if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.1.0.0-local.jar \
 	ApplyBQSR \
 	-R $REF \
 	-bqsr-recal-file $DIR/final/${sample}_baserecal_reads_gathered.table \

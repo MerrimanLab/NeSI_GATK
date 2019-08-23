@@ -27,14 +27,14 @@ i=$SLURM_ARRAY_TASK_ID
 #echo slurm tmp dir = $TMP_DIR >> $SLURM_SUBMIT_DIR/dirs.txt
 
 module load Java/1.8.0_144
-
-if ! srun java -Xmx8g -Djava.io.tmpdir=$DIR -Dsamjdk.use_async_io_write_samtools=false -jar ~/uoo02378/picard/picard_2.18.25.jar SortSam \
+#-Dsamjdk.use_async_io_write_samtools=false
+if ! srun java -Xmx8g -Djava.io.tmpdir=$DIR -jar ~/uoo02378/picard/picard_2.18.25.jar SortSam \
                                                     I=$DIR/temp/${sample}_aligned_reads_${i}.bam \
                                                     O=/dev/stdout \
                                                     SO=coordinate \
                                                     CREATE_INDEX=false \
                                                     |\
-	java -Xmx8g -Djava.io.tmpdir=$DIR -Dsamjdk.use_async_io_write_samtools=false -jar ~/uoo02378/picard/picard_2.18.25.jar SetNmMdAndUqTags \
+	java -Xmx8g -Djava.io.tmpdir=$DIR -jar ~/uoo02378/picard/picard_2.18.25.jar SetNmMdAndUqTags \
 						    I=/dev/stdin \
       						    O=$DIR/temp/${sample}_sorted_${i}.bam \
 						    R=$REF ; then

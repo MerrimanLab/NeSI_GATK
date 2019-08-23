@@ -50,7 +50,7 @@ Ncontigs=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | wc -l)
 
 JOBID1_1=$(sbatch -A uoo02378 -J s5_baserecal_1 --array=1-24 ~/uoo02378/NeSI_GATK/s5_baserecal.sl $DIR $sample)
 JOBID1_2=$(sbatch -A uoo02378 -J s5_baserecal_2 --array=25-$Ncontigs --time=3:00:00 ~/uoo02378/NeSI_GATK/s5_baserecal.sl $DIR $sample)
- s6_gather_recal.sl
+
 JOBID2=$(sbatch -A uoo02378 -d afterok:$(echo $JOBID1_2 | awk '{print $4}'),afterok:$(echo $JOBID1_2 | awk '{print $4}') -J s6_gather_recal.sl ~/uoo02378/NeSI_GATK/s6_gather_recal.sl $DIR $sample)
 JOBID3_1=$(sbatch -A uoo02378 -d afterok:$(echo $JOBID2 | awk '{print $4}') -J s7_applyrecal_1 --array=1-24 ~/uoo02378/NeSI_GATK/s7_applyrecal.sl $DIR $sample)
 JOBID3_2=$(sbatch -A uoo02378 -d afterok:$(echo $JOBID2 | awk '{print $4}') -J s7_applyrecal_2 --array=25-$Ncontigs --time=3:00:00 ~/uoo02378/NeSI_GATK/s7_applyrecal.sl $DIR $sample)
@@ -73,7 +73,7 @@ echo finish $(echo $JOBID5 | awk '{print $4}') >> $DIR/jobs.txt
 
 
 
-#rm $DIR/temp/${sample}_aligned_reads_*.ba[mi]
-#rm $DIR/temp/${sample}_sorted_*.ba[mi] 
+rm $DIR/temp/${sample}_aligned_reads_*.ba[mi]
+rm $DIR/temp/${sample}_sorted_*.ba[mi] 
 echo merge_bam finish $(date "+%H:%M:%S %d-%m-%Y")
 

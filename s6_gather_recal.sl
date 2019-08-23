@@ -25,12 +25,12 @@ source ~/uoo02378/NeSI_GATK/gatk_references.sh
 
 Ncontigs=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | wc -l)
 
-
-module load GATK/4.0.11.0-gimkl-2017a
+module restore
+module load GATK/4.1.0.0-gimkl-2017a
 
 ls $DIR/temp/${sample}_recal_data_*.csv > $DIR/temp/reports.list
 	
-if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.0.11.0-local.jar \
+if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.1.0.0-local.jar \
 	GatherBQSRReports \
 	-I $DIR/temp/reports.list \
 	-O $DIR/final/${sample}_baserecal_reads_gathered.table \
