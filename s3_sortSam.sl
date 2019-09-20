@@ -1,9 +1,10 @@
 #!/bin/bash
 #SBATCH -J s3_sortSam.sl
 #SBATCH --time=05:59:00     # Walltime
-#SBATCH --mem-per-cpu=24001  # memory/cpu (in MB)
+#SBATCH --mem-per-cpu=8096  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
 #SBATCH --nodes=1
+#SBATCH --ntasks=1
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=FAIL,TIME_LIMIT_90
 

@@ -3,6 +3,7 @@
 #SBATCH --time=5:59:00     # Walltime
 #SBATCH --mem-per-cpu=31024  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
+#SBATCH --ntasks=1
 
 # Murray Cadzow
 # University of Otago
@@ -23,11 +24,9 @@ chr=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_
 #module load GATK/4.0.11.0-gimkl-2017a
 
 module restore
-module load GATK/4.1.0.0-gimkl-2017a
+module load  Java/1.8.0_144
 
-export GATK_LOCAL_JAR=$EBROOTGATK/gatk-package-4.1.0.0-local.jar
-#if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.1.0.0-local.jar \
-if ! srun $EBROOTGATK/gatk --java-options "-Xmx30g" --spark-runner LOCAL \
+if ! srun ~/uoo02378/gatk-4.1.3.0/gatk --java-options "-Xmx30g" --spark-runner LOCAL \
 	 BaseRecalibrator \
 	-R $REF \
 	-I $DIR/temp/${sample}_dedup_reads.bam \

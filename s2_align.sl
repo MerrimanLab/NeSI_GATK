@@ -1,9 +1,10 @@
 #!/bin/bash
 #SBATCH -J s2_align.sl
 #SBATCH --time=5:59:00     # Walltime
-#SBATCH --mem-per-cpu=1000  # memory/cpu (in MB)
+#SBATCH --mem-per-cpu=1024  # memory/cpu (in MB)
 #SBATCH --cpus-per-task=8   # 12 OpenMP Threads
 #SBATCH --nodes=1
+#SBATCH --ntasks=1
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=FAIL,TIME_LIMIT_90
 

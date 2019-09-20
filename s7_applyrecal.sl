@@ -5,6 +5,7 @@
 #SBATCH --cpus-per-task=1   # 12 OpenMP Threads
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=FAIL,TIME_LIMIT_90
+#SBATCH --ntasks=1
 
 # Murray Cadzow
 # University of Otago
@@ -24,11 +25,10 @@ chr=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_
 source ~/uoo02378/NeSI_GATK/gatk_references.sh
 
 module restore
-module load GATK/4.1.0.0-gimkl-2017a
+module load Java/1.8.0_144
 
 
-if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.1.0.0-local.jar \
-	ApplyBQSR \
+if ! srun ~/uoo02378/gatk-4.1.3.0/gatk --java-options "-Xmx30g" ApplyBQSR \
 	-R $REF \
 	-bqsr-recal-file $DIR/final/${sample}_baserecal_reads_gathered.table \
 	-I $DIR/temp/${sample}_dedup_reads.bam \

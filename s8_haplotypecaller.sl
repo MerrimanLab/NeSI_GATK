@@ -5,6 +5,7 @@
 #SBATCH --cpus-per-task=4   # 12 OpenMP Threads
 #SBATCH --mail-user=murray.cadzow@otago.ac.nz
 #SBATCH --mail-type=FAIL,TIME_LIMIT_90
+#SBATCH --ntasks=1
 
 # Murray Cadzow
 # University of Otago
@@ -24,18 +25,17 @@ chr=$(cat ~/uoo02378/NeSI_GATK/contigs_h37.txt | awk -v line=${SLURM_ARRAY_TASK_
 source ~/uoo02378/NeSI_GATK/gatk_references.sh
 
 module restore
-module load GATK/4.1.0.0-gimkl-2017a
-
-
 
 
 if [[ 23 > ${SLURM_ARRAY_TASK_ID} ]]
 then
-	echo 'haplotypecaller $chr is under 23'
+	echo "haplotypecaller chr $chr is under 23"
 fi
 
-#if ! srun java -Xmx30g -jar $EBROOTGATK/gatk-package-4.0.11.0-local.jar 
-if ! srun gatk --java-options -Xmx30g --spark-runner LOCAL \
+module load Java/1.8.0_144
+
+
+if ! srun ~/uoo02378/gatk-4.1.3.0/gatk --java-options -Xmx30g --spark-runner LOCAL \
 	 HaplotypeCaller \
 	-R $REF \
 	-I $DIR/final/${sample}_baserecal_reads_${chr}.bam \
