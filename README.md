@@ -15,7 +15,7 @@ Updated for GATK 3.6 (AUG 2016)
 Updated for GATK 4.1.3 (SEP 2020)
 - Removed need for globus to run pipeline
     
-The redesign of the pipeline removed the python control script because NeSI updated their platform and now provided sufficient disk quota to no longer need to manage batches. The new workflow is copy data to NeSI (globus) -> process it all -> copy it all back (globus)
+The Sep 2020 update/redesign of the pipeline removed the python control script because NeSI updated their platform and now provided sufficient disk quota to no longer need to manage batches. The new workflow is copy data to NeSI (globus) -> process it all -> copy it all back (globus)
 
 to run:
 ```bash
